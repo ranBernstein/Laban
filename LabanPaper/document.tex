@@ -393,26 +393,66 @@ from the small dataset when using this setting.
 	\end{figure*}
 
 \subsection{Domain Adaptation}
-In this experiment the test set was taken from a subject that didn't appear in
-the train set. 
-	\begin{table}[H]
-	  	\centering
-		\begin{tabular}{|p{1.8cm}|p{1.8cm}|p{1.8cm}|}
-		\hline
-		Metric&Average Score&Standard deviation\\\hline
-		Precision&0.41&0.053\\\hline
-		Recall&0.53&0.089\\\hline
-		F1&0.457&0.064\\\hline
-		\end{tabular}
-		\caption{Qualities detection performance on a never seen subject. In every
-		trial one CMA was the test set, while the classifier was learned from the
-	rest of the CMAs.}
-	   \label{domainAdaptationBaseLine}
-	\end{table}
-
+In this experiment the test set was taken from a CMA that didn't appear in
+the train set. As it shown in table \ref{domainAdaptationBaseLine}, there is a
+dramatic degradation in the performance on the new CMA.  
+ \begin{table}[H]
+  	\centering
+	\begin{tabular}{|p{1.8cm}|p{1.8cm}|p{1.8cm}|}
+	\hline
+	Metric&Average Score&Standard deviation\\\hline
+	Precision&0.41&0.053\\\hline
+	Recall&0.53&0.089\\\hline
+	F1&0.457&0.064\\\hline
+	\end{tabular}
+	\caption{Qualities detection performance on a never seen subject. In every
+	trial one CMA was the test set, while the classifier was learned from the
+rest of the CMAs.}
+   \label{domainAdaptationBaseLine}
+\end{table}
+We blame the degradation on the great variability that we got between clips from
+one CMA to others. Every CMA performed different gestures, in different postures
+(some sitting while some standing) and in different context (some were dancing
+while some where acting).
+This great variability motivated us to work in Domain Adaptation (DA) setting.
+\subsubsection{Problem Setting}
+As it was stated by Bickel at al. \cite{Bickel}, in the DA problem setting, a
+labeled training sample:
+\\ $L = <(x_1; y_1),\ldots,(x_m; y_m)>$ is available.
+This training sample is governed by an unknown distribution $p(x|\lambda)$, labels
+are drawn according to an unknown target concept $p(y|x)$. In addition, an unlabeled test set: 
+$T = <xm+1,\ldots,xm+ni>$ becomes available. The test set is governed by a
+different unknown distribution, $p(x|\theta)$. Training and test distribution
+may differ arbitrarily, but there is only one unknown
+target conditional class distribution $p(y|x)$.
+\subsubsection{Instance  Weighting}
+If $t$ is number of tasks that we handle and $d$ is our input dimension, except
+to the mulititask classifier $W_{d \times t}$, we will learn an instance
+weighting $V_{m \times t}$ matrix, that will assign a weight for every instance in
+\testbf{every task}.
+Lets define $\Gamma_{(m+n)\times t}$ as a matrix such as:
+\[
+    \gamma_{i,j}=
+\begin{cases}
+    0,& \text{if } (x_i,y_i) \in L\\
+    1,& \text{if } x_i \in T
+\end{cases}
+\]
+So if our training set is $L=(X,Y)$, when inserting $V$ to the multitask elastic
+net framework, we get:
+\\\textbf{Optimization Problem: }\textit{Over all W, and V, minimize:}
+\begin{equation*}
+	\|V^T(Y - XW)\|^2_F + \lambda_1\cdot\|W\|_{2,1} + \lambda_1\cdot\|W\|^2_F +
+	\lambda_3\cdot\|V-\Gamma\|^2_F
+\end{equation*}
+i.e. learning both of the classifier and the instance weighting for all
+of the tasks together.
 \begin{thebibliography}{1}
 \bibliographystyle{alpha}
-  \bibitem{Bouchard}Bouchard, Durell, and Norman Badler. "Semantic segmentation
+\bibitem{Bickel}{Bickel, Steffen, Michael Brückner, and Tobias Scheffer.
+"Discriminative learning for differing training and test distributions." 
+Proceedings of the 24th international conference on Machine learning. ACM, 2007.} 
+\bibitem{Bouchard}Bouchard, Durell, and Norman Badler. "Semantic segmentation
   of motion capture using laban movement analysis." Intelligent Virtual Agents. Springer Berlin Heidelberg, 2007. 
   \bibitem{Camurri}Antonio Camurri, Giovanni De Poli, Anders Friberg, Marc Leman
 	& Gualtiero Volpe (2005): The MEGA Project: Analysis and Synthesis of
