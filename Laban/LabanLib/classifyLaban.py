@@ -3,8 +3,8 @@ from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.utilities import percentError
 import numpy as np
 import matplotlib.pyplot as plt
-import LabanUtils.util as labanUtil
-import LabanUtils.combinationsParser as cp
+import LabanLib as labanUtil
+import LabanLib as cp
 from sklearn import metrics
 
 qualities, combinations = cp.getCombinations()
@@ -61,7 +61,7 @@ for _ in range(epochs/q):
     
 plt.plot(trnresults, label='Train error')
 plt.plot(tstresults, label='Test error')
-plt.title('Laban Classification with threshold 0.5')
+plt.title('LabanLib Classification with threshold 0.5')
 plt.xlabel('epoches')
 plt.ylabel('error')
 plt.legend().draggable()

@@ -1,6 +1,6 @@
 import combinationsParser as cp
 from pybrain.datasets import ClassificationDataSet
-import Laban.algorithm.generalExtractor as ge
+import LabanLib.algorithm.generalExtractor as ge
 import numpy as np
 from pybrain.structure import FeedForwardNetwork
 from pybrain.structure import LinearLayer, SigmoidLayer

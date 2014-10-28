@@ -79,7 +79,7 @@ class AnalysisEditor(QWidget):
         
     def selectAnalysis(self):
         dlg = QFileDialog()
-        dlg.setDirectory('Laban/analysis')
+        dlg.setDirectory('LabanLib/analysis')
         analysisFile= unicode(dlg.getOpenFileName(filter='*.py'))
         self.lineEdit.setText(analysisFile)
         if not os.path.isfile(analysisFile):

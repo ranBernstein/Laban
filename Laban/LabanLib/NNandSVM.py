@@ -2,8 +2,8 @@ from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.utilities import percentError
 import numpy as np
 import matplotlib.pyplot as plt
-import LabanUtils.util as labanUtil
-import LabanUtils.combinationsParser as cp
+import LabanLib as labanUtil
+import LabanLib as cp
 from pybrain.structure import FeedForwardNetwork
 import matplotlib.pyplot as plt
 from sklearn import svm
@@ -95,7 +95,7 @@ plt.plot(trnresults, label='Train error: ' + str(trnresults[-1]))
 plt.plot(tstresults, label='Test error: ' + str(tstresults[-1]))
 plt.plot(scores, label='SVM+net train: '+str(scores[-1]))
 plt.plot([svmAloneScore]*len(scores),  label='SVM'+str(scores[-1]))
-plt.title('Laban Classification with threshold 0.5 vs svm')
+plt.title('LabanLib Classification with threshold 0.5 vs svm')
 plt.xlabel('epoches')
 plt.ylabel('error')
 plt.legend().draggable()

@@ -4,14 +4,14 @@ import numpy as np
 import scipy.stats as st
 import utils.interpulation as inter
 import utils.MovingAverage as ma
-import Laban.analysis.advanceAndRetreate as ar
-import Laban.analysis.riseAndSink as rs
-import Laban.analysis.expendingVsCondencing as ec
-import Laban.analysis.spreadindAndClosing as sp
-import Laban.analysis.bindVsFree as bf
-import Laban.analysis.lightVsStrong as ls
-import Laban.analysis.jump as jump
-import Laban.LabanUtils.AbstractLabanAnalyzer as aa
+import LabanLib.analysis.advanceAndRetreate as ar
+import LabanLib.analysis.riseAndSink as rs
+import LabanLib.analysis.expendingVsCondencing as ec
+import LabanLib.analysis.spreadindAndClosing as sp
+import LabanLib.analysis.bindVsFree as bf
+import LabanLib.analysis.lightVsStrong as ls
+import LabanLib.analysis.jump as jump
+import LabanLib.LabanUtils.AbstractLabanAnalyzer as aa
 
 chopFactor = 0.0
 def getStats(data, label):

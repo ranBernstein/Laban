@@ -1,5 +1,5 @@
 import matplotlib
-import Laban
+import LabanLib
 import utils
 import sys
 for p in sys.path:
