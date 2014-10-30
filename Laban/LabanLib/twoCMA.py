@@ -1,6 +1,6 @@
 import numpy as np
-import LabanLib as labanUtil
-import LabanLib as cp
+import LabanLib.LabanUtils.util as labanUtil
+import LabanLib.LabanUtils.combinationsParser as cp
 import LabanLib.algorithm.generalExtractor as ge
 import matplotlib.pyplot as plt
 from sklearn import metrics, svm
@@ -11,7 +11,7 @@ from multiprocessing import Pool
 import math
 from sklearn.feature_selection import f_classif, SelectKBest, f_regression,RFECV
 from sklearn.pipeline import Pipeline
-import LabanLib as ig
+import LabanLib.LabanUtils.informationGain as ig
 import matplotlib
 
 chooser=ig.infoGain#f_classif#ig.recursiveRanking#

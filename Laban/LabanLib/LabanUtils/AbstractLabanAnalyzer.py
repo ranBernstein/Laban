@@ -1,4 +1,4 @@
-from utils.kinect import jointsMap
+from mocapUtils.kinect import jointsMap
 from LabanLib.algorithm import LabanExtractor as le
 
 #class AbstractLabanAnalyzer:

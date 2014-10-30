@@ -2,7 +2,7 @@ from PyQt4.QtGui import QCheckBox, QVBoxLayout, QPushButton, QLineEdit,\
      QWidget, QGridLayout, QFileDialog
 from PyQt4.QtCore import QObject
 import numpy as np
-import utils.MovingAverage as ma
+import mocapUtils.MovingAverage as ma
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg \
                                                 as FigureCanvas

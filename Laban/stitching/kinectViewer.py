@@ -1,12 +1,12 @@
 import matplotlib.pyplot as plt
-import utils.kinect.angleExtraction as ae
-import utils.oldKinectExtractor as ke
+import mocapUtils.kinect.angleExtraction as ae
+import mocapUtils.oldKinectExtractor as ke
 import algorithm.stitching as st
 import numpy as np
 import algorithm.quantization as qu
-import utils.utils as pe
+import mocapUtils.utils as pe
 import copy
-import utils.MovingAverage as ma
+import mocapUtils.MovingAverage as ma
 import algorithm.partitionizing as prt
 from tsp_solver.greedy import solve_tsp
 import algorithm.mineByPattern as mp

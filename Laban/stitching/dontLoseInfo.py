@@ -1,9 +1,9 @@
-import utils.kinect.angleExtraction as ae
-import utils.stitching.stitching.quantization as qu
+import mocapUtils.kinect.angleExtraction as ae
+import mocapUtils.stitching.stitching.quantization as qu
 import matplotlib.pyplot as plt
-import utils.oldKinectExtractor as ke
-import utils.stitching.stitching as st
-import utils.stitching.stitching.mineByPattern as mbp
+import mocapUtils.oldKinectExtractor as ke
+import mocapUtils.stitching.stitching as st
+import mocapUtils.stitching.stitching.mineByPattern as mbp
 from numpy import linalg as LA
 import copy
 

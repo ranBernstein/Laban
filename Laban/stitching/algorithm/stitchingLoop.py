@@ -3,7 +3,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 #import matplotlib.animation as animation
-#import utils.misc.animate as an
+#import mocapUtils.misc.animate as an
 def magnitude(v):
     return math.sqrt(sum(v[i]*v[i] for i in range(len(v))))
 

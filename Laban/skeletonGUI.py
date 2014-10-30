@@ -8,7 +8,7 @@ import matplotlib
 import matplotlib.animation as animation
 from mplot3d import Axes3D    # @UnusedImport
 import sys
-from  utils.kinect import jointsMap 
+from  mocapUtils.kinect import jointsMap 
 import os
 import importlib
 from GUI.ClickableQLabel import ClickableQLabel

@@ -1,5 +1,5 @@
-import utils.kinect.angleExtraction as ae
-import utils.stitching.stitching.quantization as qu
+import mocapUtils.kinect.angleExtraction as ae
+import mocapUtils.stitching.stitching.quantization as qu
 import matplotlib.pyplot as plt
 
 fileName = 'inputs/ran_5_2_14_840.skl'

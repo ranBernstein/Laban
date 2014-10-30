@@ -1,7 +1,7 @@
-import utils.oldKinectExtractor as ex
-import utils.kinect.angleExtraction as ae
+import mocapUtils.oldKinectExtractor as ex
+import mocapUtils.kinect.angleExtraction as ae
 import matplotlib.pyplot as plt
-import utils.stitching.stitching as loop
+import mocapUtils.stitching.stitching as loop
 
 fileName = 'inputs/asc_gyro_l.skl'#alon_multi_right.skl
 joint = 'AnkleRight_X'

@@ -1,6 +1,6 @@
-import utils.kinect.angleExtraction as ae
+import mocapUtils.kinect.angleExtraction as ae
 import matplotlib.pyplot as plt
-import utils.oldKinectExtractor as ex
+import mocapUtils.oldKinectExtractor as ex
 import itertools
 import numpy as np
 fileName = 'inputs/alon_multi_right.skl'#'inputs/asc_gyro_l.skl'

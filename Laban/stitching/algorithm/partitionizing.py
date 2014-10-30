@@ -3,7 +3,7 @@ from scipy.signal import argrelextrema
 from cluster import  HierarchicalClustering
 import scipy.stats as stats
 import matplotlib.pyplot as plt
-import utils.stitching as st
+import mocapUtils.stitching as st
 """
 file = 'AMCs/673.amc'
 joint = 'ltibia'

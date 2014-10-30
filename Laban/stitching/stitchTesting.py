@@ -1,11 +1,11 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt 
-from utils.vicon.amcParser import getAMCperiod
-from utils.stitching.stitching import MAXIMA_ORDER, CLUSTER_COEFF, plotParts, createParts
-import utils.stitching.stitching as loop
-import utils.utils as ut
-import utils.MovingAverage as ma
+from mocapUtils.vicon.amcParser import getAMCperiod
+from mocapUtils.stitching.stitching import MAXIMA_ORDER, CLUSTER_COEFF, plotParts, createParts
+import mocapUtils.stitching.stitching as loop
+import mocapUtils.utils as ut
+import mocapUtils.MovingAverage as ma
 
 file = 'AMCs/598.amc'
 joint = 'rtibia'

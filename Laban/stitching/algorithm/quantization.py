@@ -9,8 +9,8 @@ import networkx as nx
 from munkres import Munkres
 from scipy.cluster.vq import kmeans2, kmeans
 from openopt import TSP
-import utils.stitching as st
-import utils.interpulation as inter
+import mocapUtils.stitching as st
+import mocapUtils.interpulation as inter
 from operator import add, mul
 import math
 import oldKinectExtractor as ke

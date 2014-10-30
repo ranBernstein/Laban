@@ -15,7 +15,7 @@ from sklearn import tree
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import ExtraTreesClassifier
-from utils import MovingAverage as ma
+from mocapUtils import MovingAverage as ma
 import math
 from multiprocessing import Pool
 from sklearn.feature_selection import SelectPercentile, f_classif, \

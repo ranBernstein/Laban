@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import utils.kinect.angleExtraction as ae
+import mocapUtils.kinect.angleExtraction as ae
 
 #f = open('myVicon/Ido dyn 01.csv', 'r')
 f = open('myVicon/Ran dyn 03.csv', 'r')

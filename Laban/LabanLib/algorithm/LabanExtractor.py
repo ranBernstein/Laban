@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
-import utils.MovingAverage as ma
+import mocapUtils.MovingAverage as ma
 import numpy as np
-import utils.spikeDetection as spike
-import utils.utils as pu
-import utils.kinect.jointsMap as jm
+import mocapUtils.spikeDetection as spike
+import mocapUtils.utils as pu
+import mocapUtils.kinect.jointsMap as jm
 
 class LabanExtractor:
         

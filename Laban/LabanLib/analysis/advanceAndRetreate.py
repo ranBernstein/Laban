@@ -1,9 +1,9 @@
 from LabanLib.LabanUtils import AbstractLabanAnalyzer
 from LabanLib.LabanUtils import AbstractAnalysis
-import utils.kinect.angleExtraction as ae
-import utils.MovingAverage as ma
+import mocapUtils.kinect.angleExtraction as ae
+import mocapUtils.MovingAverage as ma
 import numpy as np
-import utils.kinect.jointsMap as jm
+import mocapUtils.kinect.jointsMap as jm
 
 class AdvanceAndRetreate(AbstractAnalysis.AbstractAnalysis):
     

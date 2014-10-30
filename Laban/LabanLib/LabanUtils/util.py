@@ -6,6 +6,9 @@ from pybrain.structure import FeedForwardNetwork
 from pybrain.structure import LinearLayer, SigmoidLayer
 from pybrain.structure import FullConnection
 from pybrain.structure.modules import BiasUnit
+import copy
+from sklearn import metrics
+
 def getPybrainDataSet(source='Rachelle'):
     first = False#True
     qualities, combinations = cp.getCombinations()
@@ -62,30 +65,31 @@ def fromDStoXY(ds):
     outLayerSize = len(ds.getSample(0)[1])
     X=[]
     Y=[]
-    for _ in range(outLayerSize):
-        Y.append([])
     for input, tag in ds:
         X.append(input)
-        for i in range(outLayerSize):
-            Y[i].append(tag[i])
+        Y.append(tag)
     return np.array(X),np.array(Y)
 
-"""
-def clfSVM(tstdata, trndata):
-    outLayerSize = len(tstdata.getSample(0)[1])
-    clfs = []
-    for _ in range(outLayerSize):
-        clf = svm.SVC()
-        clfs.append(clf)
-    
-   
-    X,Y  = fromDStoXY(trndata)
-    for i,y in enumerate(Y):
-        clfs[i].fit(X,y)
-    
-    X,Y  = fromDStoXY(tstdata)
-    localScores = []
-    for i in range(outLayerSize):
-        localScores.append(clfs[i].score(X,Y[i]))
-    return 1-np.mean(localScores)
-"""
+
+def getXYforMultiSet(source):
+    ds, featuresNames = getPybrainDataSet(source)
+    X, Y = fromDStoXY(ds)
+    ds = ClassificationDataSet()
+    return X, Y, ds
+
+def getSplitThreshold(x, y):
+    bestSplit = None
+    bestF1 = 0
+    sortedX= copy.copy(x)
+    sortedX.sort()
+    splits = []
+    for i in range(len(sortedX)-1):
+        splits.append((sortedX[i]+sortedX[i+1])/2)
+    for split in x:
+        newX = [1 if e>=split else 0 for e in x ]
+        f1 = metrics.f1_score(newX, y)
+        if f1 > bestF1:
+            bestSplit = split
+            bestF1 = f1
+    return bestSplit, bestF1
+

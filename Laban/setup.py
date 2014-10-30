@@ -2,10 +2,10 @@ from distutils.core import setup
 import matplotlib
 
 import sys
-sys.path.append("C:\Users\\ran\git\Master\Fourier\utils")
+sys.path.append("C:\Users\\ran\git\Master\Fourier\mocapUtils")
 print sys.path[-1]
 
-import utils
+import mocapUtils
 import py2exe
 matplotlib.use("Qt4Agg")
 
@@ -29,8 +29,8 @@ import glob
 matplotlib.use("Qt4Agg")
 data_files=matplotlib.get_py2exe_datafiles()
 opts = {
-    'py2exe': { "includes" : ["utils"], 
-               'packages' : ['utils','utils.kinect']
+    'py2exe': { "includes" : ["mocapUtils"], 
+               'packages' : ['mocapUtils','mocapUtils.kinect']
               }
        }
 # for console program use 'console = [{"script" : "skeletonGUI.py"}]

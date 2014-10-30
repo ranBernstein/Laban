@@ -1,6 +1,6 @@
 import LabanUtils.util as labanUtil
 import LabanUtils.informationGain as ig
-import utils.utils as utils
+import mocapUtils.utils as utils
 import matplotlib.pyplot as plt
 import LabanUtils.combinationsParser as cp
 
@@ -27,7 +27,7 @@ for y1, y2 in zip(Y1, Y2):
     print im2
     ind = [i for i, e in enumerate(im2) if e != 0]
     print ind
-    cor = utils.corr(im1, im2)
+    cor = mocapUtils.corr(im1, im2)
     print cor
     cors.append(cor)
 
