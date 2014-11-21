@@ -14,7 +14,7 @@ from sklearn.pipeline import Pipeline
 import LabanLib.LabanUtils.informationGain as ig
 import matplotlib
 
-chooser=ig.infoGain#f_classif#ig.recursiveRanking#
+chooser=f_classif#ig.infoGain#ig.recursiveRanking#
     #splitProportion = 0.2
 import mlpy
 CMAs = ['Rachelle', 'Karen']
@@ -22,11 +22,11 @@ trainSource = CMAs[0]
 testSource = CMAs[1]
 withPCA=False
 fs=False
-c=80
+c_regulator=80
 selectedFeaturesNum = 25
 ratio ='auto'
 #percentile=5
-clf = svm.LinearSVC(C=c,  loss='LR', penalty='L1', dual=False, class_weight='auto')#{1: ratio})
+clf = svm.LinearSVC(C=c_regulator,  loss='LR', penalty='L1', dual=False, class_weight='auto')#{1: ratio})
 #clf = AdaBoostClassifier()
 #clf = svm.SVC(C=c, class_weight={1: ratio}, kernel='rbf')
 
@@ -49,7 +49,7 @@ performance.write('Quality, Precision, Recall, F1 score, Train F1 Score, Active 
 
 qualities, combinations = cp.getCombinations()
 
-for i, (y, y_test) in enumerate(zip(Y, Y_test)):
+for i, (y, y_test) in enumerate(zip(np.transpose(Y), np.transpose(Y_test))):
     print qualities[i]
     if all(v == 0 for v in y):
         continue
@@ -127,15 +127,7 @@ ax.set_xticks(ind)
 xtickNames = plt.setp(ax, xticklabels=qualities)
 plt.setp(xtickNames, rotation=90)#, fontsize=8)
 ax.set_xticklabels(qualities)
-"""
-def autolabel(rects):
-    # attach some text labels
-    for i,rect in enumerate(rects):
-        height = rect.get_height()
-        ax.text(rect.get_x()+rect.get_width()/2., 1.05*height, qualities[i],#'%d'%int(height),
-                ha='center', va='bottom')
-autolabel(f1Rects)
-"""
+
 ax.legend().draggable()
 trainSize = trndata.getLength()
 testSize = tstdata.getLength()
@@ -157,7 +149,7 @@ plt.title('CLF: '+name \
          #+', chopFactor: '+str(ge.chopFactor)
          #+', with PCA: ' +str(withPCA)
          #+', with fs: ' +str(fs)
-         +'\n with C: ' +str(c)
+         +'\n with C: ' +str(c_regulator)
          +', cw: '+str(ratio))
 plt.xlabel('Quality')
 plt.ylabel('F1 score')

@@ -1,5 +1,5 @@
 import combinationsParser as cp
-from pybrain.datasets import ClassificationDataSet
+from pybrain.datasets import ClassificationDataSet, SupervisedDataSet
 import LabanLib.algorithm.generalExtractor as ge
 import numpy as np
 from pybrain.structure import FeedForwardNetwork
@@ -24,11 +24,12 @@ def getPybrainDataSet(source='Rachelle'):
                 str(typeNum)+'_'+str(take)+'.skl'
                 try:
                     data, featuresNames = ge.getFeatureVec(fileName, first)
+                    print fileName
                     first = False
                 except IOError:
                     continue
                 if ds is None:#initialization
-                    ds = ClassificationDataSet( len(data), len(qualities) )
+                    ds = SupervisedDataSet( len(data), len(qualities) )
                 output = np.zeros((len(qualities)))
                 for q in combinations[mood][typeNum]:
                     output[qualities.index(q)] = 1
@@ -74,8 +75,15 @@ def fromDStoXY(ds):
 def getXYforMultiSet(source):
     ds, featuresNames = getPybrainDataSet(source)
     X, Y = fromDStoXY(ds)
-    ds = ClassificationDataSet()
     return X, Y, ds
+
+def getXYfromPybrainDS(ds):
+    X=[]
+    Y=[]
+    for x,y in ds:
+        X.append(x)
+        Y.append(y)
+    return np.array(X),np.array(Y)
 
 def getSplitThreshold(x, y):
     bestSplit = None
@@ -93,3 +101,18 @@ def getSplitThreshold(x, y):
             bestF1 = f1
     return bestSplit, bestF1
 
+def accumulateCMA(CMAs):
+    trndatas = None
+    for trainSource in CMAs:
+        trndata, featuresNames = getPybrainDataSet(trainSource)  
+        print featuresNames[5800]
+        if trndatas is None:
+            trndatas = trndata
+        else:
+            for s in trndata:
+                print trndatas.indim
+                print trndatas.outdim
+                print trndata.indim
+                print trndata.outdim
+                trndatas.appendLinked(*s)
+    return trndatas, featuresNames

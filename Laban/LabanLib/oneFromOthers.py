@@ -13,18 +13,25 @@ from sklearn.feature_selection import f_classif, SelectKBest, f_regression,RFECV
 from sklearn.pipeline import Pipeline
 import LabanLib.LabanUtils.informationGain as ig
 import matplotlib
+import math
+from sklearn import cross_validation
 
-chooser=ig.infoGain#f_classif#ig.recursiveRanking#
+chooser=f_classif#ig.infoGain#ig.recursiveRanking#
     #splitProportion = 0.2
 def accumulateCMA(CMAs):
     trndatas = None
     for trainSource in CMAs:
         trndata, featuresNames = labanUtil.getPybrainDataSet(trainSource)  
+        print featuresNames[5800]
         if trndatas is None:
             trndatas = trndata
         else:
             for s in trndata:
-                trndatas.appendLinked(s)
+                print trndatas.indim
+                print trndatas.outdim
+                print trndata.indim
+                print trndata.outdim
+                trndatas.appendLinked(*s)
     return trndatas, featuresNames
 trainCMAs = ['Rachelle', 'Milca']
 testCMAs = ['Karen']
@@ -33,11 +40,11 @@ tstdata, featuresNames = accumulateCMA(testCMAs)
 
 withPCA=False
 fs=False
-c=80
+c_regulator=80
 selectedFeaturesNum = 25
 ratio ='auto'
 #percentile=5
-clf = svm.LinearSVC(C=c,  loss='LR', penalty='L1', dual=False, class_weight='auto')#{1: ratio})
+clf = svm.LinearSVC(C=c_regulator,  loss='LR', penalty='L1', dual=False, class_weight='auto')#{1: ratio})
 #clf = AdaBoostClassifier()
 #clf = svm.SVC(C=c, class_weight={1: ratio}, kernel='rbf')
 
@@ -58,7 +65,7 @@ performance.write('Quality, Precision, Recall, F1 score, Train F1 Score, Active 
 
 qualities, combinations = cp.getCombinations()
 
-for i, (y, y_test) in enumerate(zip(Y, Y_test)):
+for i, (y, y_test) in enumerate(zip(np.transpose(Y), np.transpose(Y_test))):
     print qualities[i]
     if all(v == 0 for v in y):
         continue
@@ -85,6 +92,7 @@ for i, (y, y_test) in enumerate(zip(Y, Y_test)):
                     ('feature_selection', anova_filter),
                     ('classification', clf)
                     ])
+    
     pipe.fit(X, y)
     
     coefs = clf.coef_[0]
@@ -97,6 +105,9 @@ for i, (y, y_test) in enumerate(zip(Y, Y_test)):
     
     precision = metrics.precision_score(y_test, pred)
     recall = metrics.recall_score(y_test, pred)
+    #scores = cross_validation.cross_val_score(clf, X_test, \
+    #                                          y_test, cv=5, scoring='f1')
+    #f1 = np.mean(scores)
     f1 = metrics.f1_score(y_test, pred)
     performance.write(qualities[i]
                       +', '+ str(round(precision,3))\
@@ -158,16 +169,12 @@ font = {'family' : 'normal',
 matplotlib.rc('font', **font)
 
 plt.title('CLF: '+name \
-         + ', Train set: CMA #1'+' size-'+str(trainSize) \
-         + ', Test set: CMA #2'+' size-'+str(testSize) \
+         + ', Train set: '+str(trainCMAs)+', trainSize-'+str(trainSize) \
+         + ', Test set: '+str(testCMAs)+', testSize-'+str(testSize) \
          + '\n Features num: '+str(vecLen) \
          + ', Featue selection (FS) method: '+chooser.__name__ \
          + ', Features num after FS: '+str(selectedFeaturesNum) \
-         #+', chopFactor: '+str(ge.chopFactor)
-         #+', with PCA: ' +str(withPCA)
-         #+', with fs: ' +str(fs)
-         +'\n with C: ' +str(c)
-         +', cw: '+str(ratio))
+         +'\n with C: ' +str(c_regulator))
 plt.xlabel('Quality')
 plt.ylabel('F1 score')
 plt.show()

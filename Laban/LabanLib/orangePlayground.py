@@ -9,14 +9,20 @@ source = 'Rachelle'
 ds, featuresNames = labanUtil.getPybrainDataSet(source)
 
 X, Y = labanUtil.fromDStoXY(ds)
+Y = [str(e) for y in Y for e in y]
+print Y
+
 features = [Orange.feature.Continuous(f) for f in featuresNames]
 for q in qualities:
     features.append(Orange.feature.Discrete(q, values=['0','1']))
+print features
 Domain = Orange.data.Domain(features)
 print X.shape, Y.shape
 whole = np.concatenate((X,Y), axis=1)
+print whole.shape
 Table = Orange.data.Table(Domain, whole)
 Table.save(source+'.tab')
+
 """
 for x, y in zip(X, Y):
     List, Of, Column, Variables = 

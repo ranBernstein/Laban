@@ -12,7 +12,7 @@ import LabanLib.analysis.bindVsFree as bf
 import LabanLib.analysis.lightVsStrong as ls
 import LabanLib.analysis.jump as jump
 import LabanLib.LabanUtils.AbstractLabanAnalyzer as aa
-
+import math
 chopFactor = 0.0
 def getStats(data, label):
     stats = []
@@ -118,7 +118,6 @@ def getFeatureVec(fileName, chopFactor, firstRun=False, joints=None):
         vec+=v
         featuresNames+=f
     
-    #For directness measurement
     for i in range(len(jointsHeaders)/4):#iterate over joints
         
         #Get the joint's relative position
@@ -147,11 +146,16 @@ def getFeatureVec(fileName, chopFactor, firstRun=False, joints=None):
         dircetness = []
         if firstRun:
             print 'directness measurement', jointsHeaders[4*i], len(vec)
-        for i in range(len(movements)-1):
-            first = ae.getUnitVec(movements[i])
-            second = ae.getUnitVec(movements[i+1])
-            dircetness.append(np.dot(first, second))
-        v, f = analyzeData(time[1:-1], dircetness, 'Directness ')
+        dircetnessTime = []
+        for j in range(len(movements)-1):
+            if ae.length(movements[j]) == 0 or ae.length(movements[j+1]) == 0:
+                continue
+            first = ae.getUnitVec(movements[j])
+            second = ae.getUnitVec(movements[j+1])
+            res = np.dot(first, second)
+            dircetness.append(res)
+            dircetnessTime.append(time[j])
+        v, f = analyzeData(dircetnessTime, dircetness, 'Directness ')
         vec+=v
         featuresNames+=f
     extractor = aa.getExtractor(fileName)

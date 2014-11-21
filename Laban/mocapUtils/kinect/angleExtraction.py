@@ -97,6 +97,8 @@ def dis(x1, x2, y1, y2, z1, z2):
     return sqrt((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2)
 
 def getUnitVec(v):
+    if length(v)==0:
+        raise 'Got null vector'
     return (np.array(v)/length(v)).tolist()
 
 def getAngleFromSplited(headers, splited, jointStr, checkConfedence=True, version='OLD'):
