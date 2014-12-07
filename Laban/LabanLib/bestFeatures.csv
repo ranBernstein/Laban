@@ -1,19 +1,19 @@
 Quality, Feature Name, Operator, Information Gain, p-value
-Advance, Position of Head_Zafter LPF  , max, 28.22, 2.6e-07
-ArmsToUpperBody, WristRight angle  , mean square, 91.63, 2.3e-18
-Bind, Position of ElbowRight_X , max, 54.56, 3.1e-12
-Condense+Enclose, Position of Head_Yafter LPF  , min, 52.21, 8.1e-12
-Direct, Directness  acceleration , min abs, 27.78, 3.2e-07
-Free+Light, Average of Joint Distance From Center , max abs, 88.04, 8.4e-18
-Head-drop, Position of Head_Z , mean, 57.36, 1.0e-12
-Jump, Position of SpineBase_Y , max, 278.62, 6.6e-41
-Passive, Directness after LPF  , mean, 45.52, 1.3e-10
-Retreat, Position of ElbowRight_Xafter LPF  , mean, 60.53, 2.8e-13
-Rhythmicity, ElbowLeft angle  , min abs, 55.27, 2.3e-12
-Rotation, Position of ElbowRight_Z acceleration , std, 140.04, 2.6e-25
-Sink, Position of SpineBase_Y , mean, 83.88, 3.8e-17
-Spread, Position of HandTipLeft_Xafter LPF  , min, 152.63, 5.9e-27
-Strong, Directness  , min, 28.53, 2.3e-07
-Sudden, Position of KneeRight_Z , mean square, 44.0, 2.5e-10
-Twist+Back, Position of SpineBase_Z , max, 118.13, 2.7e-22
-Up+Rise, Position of ElbowLeft_Yafter LPF  , max, 112.1, 2.0e-21
+Advance, Position of Neck_Z , mean abs, 51.01, 3.4e-11
+ArmsToUpperBody, WristRight angle  , mean square, 53.22, 1.5e-11
+Bind, Position of SpineBase_Zafter LPF  , max, 59.04, 1.7e-12
+Condense+Enclose, ElbowRight angle after LPF  , max abs, 73.58, 1.0e-14
+Direct, Position of Head_Zafter LPF  , max abs, 27.49, 5.1e-07
+Free+Light, Average of Joint Distance From Center , max abs, 56.12, 5.0e-12
+Head-drop, Position of Head_Z , mean, 52.09, 2.3e-11
+Jump, Position of SpineBase_Y , max, 195.05, 4.2e-29
+Passive, AnkleRight angle  , mean square, 50.93, 3.5e-11
+Retreat, Position of SpineBase_Zafter LPF  , max, 52.71, 1.8e-11
+Rhythmicity, Directness after LPF   ,kurtosis, 36.59, 1.0e-08
+Rotation, Position of ElbowRight_Z acceleration , max abs, 97.75, 3.9e-18
+Sink, Position of SpineBase_Y , mean, 66.71, 1.0e-13
+Spread, Position of HandTipLeft_Xafter LPF  , min, 124.42, 1.6e-21
+Strong, Position of Neck_Z , mean abs, 40.11, 2.5e-09
+Sudden, Position of SpineShoulder_Zafter LPF  , min abs, 64.73, 2.2e-13
+Twist+Back, Position of SpineBase_Zafter LPF  , max, 272.56, 8.2e-36
+Up+Rise, Position of SpineShoulder_Y jurk , mean abs, 72.81, 1.3e-14

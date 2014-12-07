@@ -15,11 +15,13 @@ class LabanExtractor:
         vec = []
         for line in f:
             lineInFloats=[float(v) for v in line.split()]
-            #try:
-            vec.append(huristic(lineInFloats, headers, jointsIndices))
-            #except Exception, e:
+            try:
+                vec.append(huristic(lineInFloats, headers, jointsIndices))
+            except Exception, e:
                 #vec.append(huristic(lineInFloats, headers, jointsIndices))
-                #print e
+                print 'LabanExtractor:extractLaban'
+                print e
+                print line
         return vec
     
     def printConfedence(self, filtered, ranges, positive, negetive):

@@ -1,23 +1,33 @@
 
-Passive,  ArmsToUpperBody,  Sink,  Head-drop  s1
-Passive,  ArmsToUpperBody,  Sink  s2
-Passive,  Sink,   Head-drop  s3
-Passive,  ArmsToUpperBody,  Head-drop  s4
-ArmsToUpperBody,  Sink,  Head-drop   s5
-Passive,  ArmsToUpperBody   s6
-Passive,  Sink  s7
-Passive,  Head-drop  s8  
-ArmsToUpperBody,  Sink  s9
+ArmsToUpperBody,  Bind,  Sink s15
+ArmsToUpperBody,  Condense+Enclose,  Head-drop, Passive s12
+ArmsToUpperBody, Condense+Enclose,  Head-drop,  Sink s14
+ArmsToUpperBody, Condense+Enclose,  Retreat,  Sink s17
+ArmsToUpperBody,  Condense+Enclose, Twist+Back s16
+ArmsToUpperBody, Condense+Enclose,  Passive, Sink s20
 ArmsToUpperBody,  Head-drop  s10
-Sink,  Head-drop  s11
+ArmsToUpperBody,  Head-drop,  Passive  s4
+ArmsToUpperBody  Head-drop,  Passive,  Sink,  s1
+ArmsToUpperBody,  Head-drop,  Sink   s5
+ArmsToUpperBody,   Passive  s6
+ArmsToUpperBody,  Passive,  Sink  s2
+ArmsToUpperBody,  Sink  s9
+Head-drop,  Passive  s8  
+Head-drop,  Passive,   Retreat,  Sink s13
+Head-drop,  Passive,   Sink  s3
+Head-drop,  Sink  s11
+Passive,  Sink  s7
+Passive,  Sink, Condense+Enclose  s18
 
 Strong,  Sudden,  Advance,  Direct  a1
 Strong,  Sudden,  Advance   a2
+Strong,  Sudden,  Advance, Up+Rise   a12
 Strong,  Advance,  Direct  a3
 Strong,  Sudden,  Direct  a4
 Sudden,  Advance,  Direct  a5
 Strong,  Sudden  a6
 Strong,  Advance  a7
+Strong,  Advance, Bind  a13
 Strong,  Direct   a8  
 Sudden,  Advance  a9
 Sudden,  Direct  a10
@@ -25,6 +35,7 @@ Advance,  Direct  a11
 
 Retreat,  Condense+Enclose,  Bind,  Twist+Back  f1
 Retreat,  Condense+Enclose,  Bind  f2
+Retreat,  Condense+Enclose,  Bind, Rotation  f12
 Retreat,  Bind,  Twist+Back  f3
 Retreat,  Condense+Enclose,   Twist+Back   f4
 Condense+Enclose,  Bind,  Twist+Back   f5

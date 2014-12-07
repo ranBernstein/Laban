@@ -78,17 +78,16 @@ for i, (y, y_test) in enumerate(zip(np.transpose(Y), np.transpose(Y_test))):
                     ])
     pipe.fit(X, y)
     
-    coefs = clf.coef_[0]
-    activeCoefsNum = len([c for c in coefs if c!=0])
-    
     predTrain =  pipe.predict(X)
     f1sTrain = metrics.f1_score(y, predTrain)
-    #print len([c for c in clf.coef_ if c != 0])
     pred = pipe.predict(X_test)
     
     precision = metrics.precision_score(y_test, pred)
     recall = metrics.recall_score(y_test, pred)
     f1 = metrics.f1_score(y_test, pred)
+    """
+    coefs = clf.coef_[0]
+    activeCoefsNum = len([c for c in coefs if c!=0])
     performance.write(qualities[i]
                       +', '+ str(round(precision,3))\
                       +', '+ str(round(recall,3))\
@@ -96,7 +95,7 @@ for i, (y, y_test) in enumerate(zip(np.transpose(Y), np.transpose(Y_test))):
                       +', '+ str(round(f1sTrain, 3))\
                       +', '+ str(activeCoefsNum)\
                       +'\n')
-    
+    """
     
     selector = SelectKBest(chooser, 1)
     selector.fit(X, y)

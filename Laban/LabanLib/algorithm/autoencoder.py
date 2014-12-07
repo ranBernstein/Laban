@@ -14,6 +14,85 @@ from pybrain.tools.validation import CrossValidator
 import copy
 class Autoencoder:
     
+    def initSupervised(self, inDim, outDim, hiddenSize=100):
+        #inputSize, hiddenSize, outputSize = len(firstSample[0]), hiddenSize, len(firstSample[1])
+        
+        self.inLayer = LinearLayer(inDim)
+        self.hiddenLayer =SigmoidLayer(hiddenSize)
+        self.outLayer = LinearLayer(outDim)
+        self.b = BiasUnit()
+                
+        self.in_to_hidden = FullConnection(self.inLayer, self.hiddenLayer)
+        self.hidden_to_out = FullConnection(self.hiddenLayer, self.outLayer)
+        self.b_to_hidden = FullConnection(self.b, self.hiddenLayer)
+        self.b_to_out = FullConnection(self.b, self.outLayer)
+        
+        #self.representationNet = an
+        
+    def trainSupervised(self, 
+            num,
+            ds,
+            initialLearningrate=0.002,
+            decay=0.9999,
+            myWeightdecay=0.8,
+            momentum=0):
+        n = FeedForwardNetwork()
+        n.addInputModule(self.inLayer)
+        n.addModule(self.hiddenLayer)
+        n.addModule(self.b)
+        n.addOutputModule(self.outLayer)
+        n.addConnection(self.in_to_hidden)
+        n.addConnection(self.hidden_to_out)
+        n.addConnection(self.b_to_hidden)
+        n.addConnection(self.b_to_out)
+        n.sortModules()
+        self.supervisedNet = n
+        self.supervisedTrainer = BackpropTrainer(n, ds,  
+            learningrate=initialLearningrate,
+            lrdecay=decay, 
+            verbose=True, 
+            weightdecay=myWeightdecay,
+            batchlearning=True,
+            momentum=momentum) 
+        self.supervisedTrainer.trainEpochs(num)
+        #self.supervisedTrainer.train()
+        
+    def scoreOnDS(self, ds):
+        Y = np.array([y for x,y in ds])
+        trainVec = self.supervisedNet.activateOnDataset(ds)
+        #dif = np.abs(np.subtract(Y, trainVec))
+        #trainRes = float(sum(sum(dif)))/Y.shape[0]/Y.shape[1]
+        splits = []
+        for col in range(trainVec.shape[1]):
+            bestSplit, bestF1 = labanUtil.getSplitThreshold(trainVec[:, col], Y[:, col])
+            splits.append(bestSplit)
+        for col in range(trainVec.shape[1]):
+            trainVec[:, col] = [1 if e>=splits[col] else 0 for e in trainVec[:, col]]
+        f1s = []
+        for j in range(Y.shape[1]):
+            f1s.append(metrics.f1_score(Y[:,j], trainVec[:,j]))
+        return np.mean(f1s) 
+
+    def transform(self, X):
+        #self.representationNet.sortModules()
+        an = FeedForwardNetwork()
+        an.addInputModule(self.inLayer)
+        an.addOutputModule(self.hiddenLayer)
+        an.addModule(self.b)
+        an.addConnection(self.in_to_hidden)
+        an.addConnection(self.b_to_hidden)
+        an.sortModules()
+        an.owner = self.supervisedNet
+        #print self.representationNet.params
+        #print 'kuku'
+        #print self.supervisedNet.params
+        transformed = []
+        for x in X:
+            #res = self.representationNet.activate(x)
+            res = an.activate(x)
+            transformed.append(res)
+        return np.array(transformed)
+    
     def fit(self, ds, 
             epochs=100,
             hiddenSize=100, 
@@ -23,7 +102,6 @@ class Autoencoder:
             plot=False,
             testDs=None,
             momentum=0): 
-        #ds._convertToOneOfMany()
         firstSample = ds.getSample(0)
         print firstSample
         inputSize, hiddenSize, outputSize = len(firstSample[0]), hiddenSize, len(firstSample[1])
@@ -45,7 +123,9 @@ class Autoencoder:
         n.addConnection(b_to_hidden)
         n.addConnection(b_to_out)
         n.sortModules()
-        trainer = BackpropTrainer(n, ds,  
+        self.supervisedNet = n
+        n = self.supervisedNet
+        self.supervisedTrainer = BackpropTrainer(n, ds,  
                             learningrate=initialLearningrate,
                             lrdecay=decay, 
                             verbose=True, 
@@ -53,8 +133,8 @@ class Autoencoder:
                             batchlearning=True,
                             momentum=momentum)
         """
-        #trainer.trainEpochs(epochs)
-        def eval(net, output, target):
+        #supervisedTrainer.trainEpochs(epochs)
+        def eval(representationNet, output, target):
             output = [1 if o>0.5 else 0 for o in output]
             output = np.array(output)
             target = np.array(target)
@@ -62,7 +142,7 @@ class Autoencoder:
             n_correct = sum( output == target )
             return float(n_correct) / float(len(output))
         """
-        cv = CrossValidator(trainer, ds,n_folds=int(len(ds)/10)) #valfunc=eval)
+        #cv = CrossValidator(self.supervisedTrainer, ds,n_folds=int(len(ds)/5)) #valfunc=eval)
         
         Y = np.array([y for x,y in ds])
         if plot:
@@ -73,7 +153,7 @@ class Autoencoder:
             sums=[]
             lastTrainVec = np.zeros(Y.shape)
             for epochNum in range(epochs):
-                trainer.train()
+                self.supervisedTrainer.train()
                 """
                 pred = n.activateOnDataset(ds)
                 f1s = []
@@ -98,6 +178,7 @@ class Autoencoder:
                 print 'initialLearningrate', initialLearningrate
                 print 'decay', decay
                 print 'myWeightdecay', myWeightdecay
+                print 'momentum', momentum
                 s = sum(np.abs(trainVec[0]))
                 s2 = sum(Y[0])
                 print 'sum(trainVec[0])', s
@@ -154,15 +235,9 @@ class Autoencoder:
         an.addConnection(in_to_hidden)
         an.addConnection(b_to_hidden)
         an.sortModules()
-        self.net = an
+        self.representationNet = an
         return des
 
-    def transform(self, X):
-        transformed = []
-        for x in X:
-            res = self.net.activate(x)
-            transformed.append(res)
-        return np.array(transformed)
 
 """
 from pybrain.datasets import ClassificationDataSet

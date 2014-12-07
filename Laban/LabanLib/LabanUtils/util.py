@@ -36,12 +36,13 @@ def getPybrainDataSet(source='Rachelle'):
                 ds.appendLinked(data ,  output)
 
                 l+=sum(output)
+    #print source, l, len(ds)
     return ds, featuresNames
 
 def constructNet(inLayerSize, hiddenSize, outLayerSize):
     inLayer = LinearLayer(inLayerSize)
     hiddenLayer = SigmoidLayer(hiddenSize)
-    outLayer = SigmoidLayer(outLayerSize)
+    outLayer = LinearLayer(outLayerSize)
     n = FeedForwardNetwork()
     n.addInputModule(inLayer)
     n.addModule(hiddenLayer)
@@ -105,14 +106,9 @@ def accumulateCMA(CMAs):
     trndatas = None
     for trainSource in CMAs:
         trndata, featuresNames = getPybrainDataSet(trainSource)  
-        print featuresNames[5800]
         if trndatas is None:
             trndatas = trndata
         else:
             for s in trndata:
-                print trndatas.indim
-                print trndatas.outdim
-                print trndata.indim
-                print trndata.outdim
                 trndatas.appendLinked(*s)
     return trndatas, featuresNames
