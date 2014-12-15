@@ -86,6 +86,12 @@ def getXYfromPybrainDS(ds):
         Y.append(y)
     return np.array(X),np.array(Y)
 
+def fromXY2DS(X, Y):
+    ds=SupervisedDataSet(X.shape[1], Y.shape[1])
+    for x,y in zip(X,Y):
+        ds.addSample(x, y)
+    return ds
+
 def getSplitThreshold(x, y):
     bestSplit = None
     bestF1 = 0

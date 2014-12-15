@@ -17,11 +17,11 @@ def scorer(pipe, X, y):
 
 def precisionScorer(pipe, X, y):
     pred = pipe.predict(X)
-    return metrics.precision_score(y, pred), metrics.recall_score(y, pred)
+    return metrics.precision_score(y, pred)
 
 def recallScorer(pipe, X, y):
     pred = pipe.predict(X)
-    return metrics.recall_score(y, pred), metrics.recall_score(y, pred)
+    return metrics.recall_score(y, pred)
 
 if __name__ == '__main__':
     CMAs = ['Rachelle', 'Milca', 'Sharon', 'Karen']
@@ -37,7 +37,8 @@ if __name__ == '__main__':
     
     #for filteredFeaturesNum in params:
     clf = svm.LinearSVC(C=c_regulator, loss='LR', penalty='L1', dual=False, 
-                        class_weight='auto')#{1: ratio})
+                       class_weight='auto')
+    #clf = svm.LinearSVC(C=c_regulator, dual=False)
     name = str(clf).split()[0].split('(')[0]
     selectedFeaturesNum=0.6*filteredFeaturesNum
     anova_filter = SelectKBest(f_classif, k=filteredFeaturesNum)
@@ -51,19 +52,27 @@ if __name__ == '__main__':
                         ('wrapper_selection', ig_wrapper),
                         ('classification', clf)
                         ])
+        from sklearn.neighbors import KNeighborsClassifier
+        pipe = KNeighborsClassifier()
         pipe.fit(X, y)
         print qualities[i]
-        fs+= cross_validation.cross_val_score(pipe, X, y=y,
-            scoring=scorer, cv=2, verbose=True,n_jobs=2).tolist()
+        #fs+= cross_validation.cross_val_score(pipe, X, y=y,
+        #    scoring=scorer, cv=2, verbose=True,n_jobs=2).tolist()
         precisions+= cross_validation.cross_val_score(pipe, X, y=y,
-            scoring=precisionScorer, cv=2, verbose=True,n_jobs=2).tolist()
+            scoring=precisionScorer, cv=5, verbose=True,n_jobs=2).tolist()
         recalls+= cross_validation.cross_val_score(pipe, X, y=y,
-            scoring=recallScorer, cv=2, verbose=True,n_jobs=2).tolist()
+            scoring=recallScorer, cv=5, verbose=True,n_jobs=2).tolist()
         #fs+=score))
+    print precisions
+    print recalls
     pre = np.mean(precisions)
     re = np.mean(recalls)
     f = 2*pre*re/(pre+re)
-    print 'stage 10'
+    des = str((pre, re, f))
+    des+=str(c_regulator)
+    des+=' stage 5 '
+    plt.title(des)
+    plt.scatter(precisions, recalls)
     print pre, re, f
     plt.show()
     #totalScores.append(np.mean(scores))

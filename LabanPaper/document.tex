@@ -1,4 +1,4 @@
-\documentclass[11pt,twocolumn, varwidth=true]{article}
+\documentclass[11pt,twocolumn,varwidth=true,a4paper,fleqn]{article}
 \usepackage{fullpage}
 \usepackage{url}
 \usepackage[margin=1.1in]{geometry}
@@ -7,7 +7,7 @@
 \usepackage{varwidth}
 \usepackage{array}
 \usepackage{float}
-
+\usepackage{amsmath}
 \begin{filecontents}{oneCMASummary.csv}
 \end{filecontents}
 
@@ -58,7 +58,7 @@ Time: Sudden or Sustained
 Weight: Strong or Light 
 \end{itemize}
 The whole hierarchy of LMA is described in figure number \ref{laban}.
-\begin{figure*}[ht!]
+\begin{figure*}[h]
 \centering
 \includegraphics[width=\textwidth]{laban.png}
 \caption{Laban movement analysis main axes.}
@@ -78,7 +78,7 @@ this paper we extend such kind of work.
 \subsection{Kinect sensor data}
 This following figure shows the skeleton that is provided by the Kinect's
 software development kit that were use in this paper.
-\begin{figure}[ht!]
+\begin{figure}[h]
 \centering
 \includegraphics[width=60mm]{skeleton.jpg}
 \caption{Skeleton positions relative to the human body}
@@ -89,7 +89,7 @@ Once the skeleton is detected, the 3D coordinates of all joints of user’s body
 behind his back) are provided.
 As seen in figure \ref{Coordinate}, the coordinates are in a “real-world”
 coordinate system, that has the beginning [0,0,0] in the sensor, x,y and z-axis goes as shown on the picture below and the units are milimeters. 
-\begin{figure}[ht!]
+\begin{figure}[h]
 \centering
 \includegraphics[width=60mm]{KinectV2CoordinateSystem.jpg}
 \caption{Kinect Coordinate System}
@@ -108,7 +108,7 @@ whole clip granularity.
 \subsubsection{General low level features}
 For every joint in the skeleton the angular velocity, acceleration and jerk were
 extracted, and for each one of them the mean, variance, skew and kurtosis were
-extracted (the extraction of the last four moments is denoted as \phi). 
+extracted (the extraction of the last four moments is denoted as $\phi$). 
 \subsubsection{Shape: Sagital}
 In this quality a separation between Advance and Retreat. The quantification of
 this quality was done by projecting the speed vector of the Center Of Mass (COM)
@@ -120,20 +120,22 @@ the Right Shoulder (RS).
 a clip with n frames, and $ \alpha_{j}$ is a coefficient proportional to the
 mass around of the joint:
 \\
-\\\vec{P}_{COM}(t) = \sum_{j \in Joints} \alpha_{j}\vec{P}_{j}(t)
+\\$\vec{P}_{COM}(t) = \sum_{j \in Joints} \alpha_{j}\vec{P}_{j}(t)
 \\
-\\\vec{P}_{shoulders}(t)=\vec{P}_{LS}(t)-\vec{P}_{RS}(t)
+\\\vec{P}_{shoulders}(t)=\vec{P}_{LS}(t)-\vec{P}_{RS}(t)$
 \\
-\\\vec{P}_{front}=\vec{P}_{shoulders}\[ \left( \begin{array}{ccc}
+\\\[ \vec{P}_{front}=\vec{P}_{shoulders}\left( \begin{array}{ccc}
 0 & 0 & 1 \\
 0 & 1 & 0 \\
--1 & 0 & 0 \end{array} \right)\] 
+-1 & 0 & 0 \end{array} \right)\]
 \\
-\\S_{sag}(t) = \vec{P}_{COM}(t)\cdot\vec{P}_{front}(t)
 \\
-\\\vec{F}_{sag} = \phi([S_{sag}(1), \ldots S_{sag}(n)])
+$S_{sag}(t) = \vec{P}_{COM}(t)\cdot\vec{P}_{front}(t)$
+\\
+\\
+$\vec{F}_{sag} = \phi([S_{sag}(1), \ldots S_{sag}(n)])$
 \\\\
-Where $ \phi$ is the moments extraction.
+Where $\phi$ is the moments extraction.
 \subsubsection{Shape: Horizontal}
 Here the separation is between spreading and enclosing in the horizontal axe.
 This quality was quantified by measuring the average distance of the joint from
@@ -142,26 +144,26 @@ Base (SB).
 This axe was approximated with the Kinect's horizontal axe(y), what made the
 distance measured in the projection of the joints on the XZ plane.
 \\
-\\d_{j} = \frac{\left|(\vec{P}_{j}-\vec{P}_{SB})\times
+\\$d_{j} = \frac{\left|(\vec{P}_{j}-\vec{P}_{SB})\times
 (\vec{P}_{j}-\vec{P}_{H})\right|}{\left|\vec{P}_{H}-\vec{P}_{SB}\right|}
 \\
 \\S_{horiz}(t) = \sum_{j \in Joints} d_{j}(t)
 \\
-\\\vec{F}_{horiz} = \phi([S_{sag}(1), \ldots S_{sag}(n)])
+\\\vec{F}_{horiz} = \phi([S_{sag}(1), \ldots S_{sag}(n)])$
 \\\\
-Where $ \phi$ is the moments extraction.
+Where $\phi$ is the moments extraction.
 \subsubsection{Shape: Vertical}
 Here the separation is between Rise and sink.
 This quality was quantified by measuring the average distance on axe y of each
 joint from the COM. This quantification comes from the assumption that the body
 is ``longer'' when rising.
 \\
-\\S_{vert}(t) = \sum_{j \in Joints}
+\\$S_{vert}(t) = \sum_{j \in Joints}
 \left|\vec{P}_{j}-\vec{P}_{COM}\right|
 \\
-\\\vec{F}_{vert} = \phi([S_{sag}(1), \ldots S_{sag}(n)])
+\\\vec{F}_{vert} = \phi([S_{sag}(1), \ldots S_{sag}(n)])$
 \\\\
-Where $ \phi$ is the moments extraction.
+Where $\phi$ is the moments extraction.
 \subsubsection{Effort: Time}
 Here the separation is between Sudden or Sustained. This quality was 
 quantified by the skew of the acceleration, relaying on the belief that the
@@ -174,9 +176,9 @@ relaying on the belief that in direct movement every vector will be in
 the same direction as the last (the angle between them is small).
 \\If $\vec{P}_{j}(t)$ is the vector of the position of joint j in time t, the
 movement vectors are:
-\\\\\vec{V}_{j}(t) = \vec{P}_{j}(t+1) - \vec{P}_{j}(t)
-\\\\$The angles between them are calculated with inner products:$
-\\\\\vec{A}_{j}(t) = \vec{V}_{j}(t+1) \cdot \vec{V}_{j}(t)
+\\\\$\vec{V}_{j}(t) = \vec{P}_{j}(t+1) - \vec{P}_{j}(t)
+\\\\The angles between them are calculated with inner products:
+\\\\\vec{A}_{j}(t) = \vec{V}_{j}(t+1) \cdot \vec{V}_{j}(t)$
 
 
 \subsection{Performance Evaluation}
@@ -189,119 +191,178 @@ non of the qualities appear. A better evaluation have to combine the precision
 and recall rates of the classifier. The way that the last two were combined is
 with the usage of F one score:
 \\
-\\F_{1} = \frac{2\cdot precision\cdot recall}{precision+recall}
+\\$F_{1} = \frac{2\cdot precision\cdot recall}{precision+recall}$
 \subsection{Feature Selection}
-Every clip is extracted into a vector of 6120 features. Most of
-them are noisy or redundent. For that reason a massive feature selection is
-needed. The feature selection is done in three stages:
-\begin{itemize}
-	\item
-	Computing the Anova F-value for every feature over the training set. Cross validation was used to determine the optimal amount of features that should be
-	left. As it seen in figure  \ref{selection}, The result was that the filtering
-	of the vectors outperformed the usage in non filtered vectors, where using the
-	top 2\% of features is optimal.
-	\begin{figure}[ht!]
-		\centering
-		\includegraphics[width=60mm]{featureSelection.png}
-		\caption{Influence of the percent of features that were used on the F1 score.
-		The blue line is the difference between the score with an without feature
-		selection. It can be seen that the optimal amount to slecet is 2\%}
-		\label{selection}
+	Every clip is extracted into a vector of 6120 features. Most of
+	them are noisy or redundent. For that reason a massive feature selection is
+	needed. The feature selection is done in three stages:
+	\begin{itemize}
+		\item
+		Computing the Anova F-value for every feature over the training set. Cross validation was used to determine the optimal amount of features that should be
+		left. As it seen in figure  \ref{selection}, The result was that the filtering
+		of the vectors outperformed the usage in non filtered vectors, where using the
+		top 2\% of features is optimal.
+		\begin{figure}[ht!]
+			\centering
+			\includegraphics[width=60mm]{featureSelection.png}
+			\caption{Influence of the percent of features that were used on the F1 score.
+			The blue line is the difference between the score with an without feature
+			selection. It can be seen that the optimal amount to slecet is 2\% 
+			}
+			\label{selection}
+			\end{figure}
+		\item
+		\ref{igFromFclassif}
+		The second phase of feature selection is conducted by information gain rating
+		of the features.
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=60mm]{igFromFclassif.png}
+			\caption{Influance of the proportion of Information based selection from the
+			subset chosen by the ANOVA selection.}
+			\label{igFromFclassif}
 		\end{figure}
-	\item
-	\ref{igFromFclassif}
-	The second phase of feature selection is conducted by information gain rating
-	of the features.
-	\begin{figure}[ht!]
-		\centering
-		\includegraphics[width=60mm]{igFromFclassif.png}
-		\caption{Influance of the proportion of Information based selection from the
-		subset chosen by the ANOVA selection.}
-		\label{igFromFclassif}
-	\end{figure}
-	\item
-	The third phase of feature section was made by Least Absolute Shrinkage and
-	Selection Operator (LASSO).
-\end{itemize}
-  
-
+		\item
+		The third phase of feature section was made by Least Absolute Shrinkage and
+		Selection Operator (LASSO).
+	\end{itemize}
+	Example for Features and their significanse is shown in table
+	number \ref{bestFeatures}.
+	\begin{table*}[h]
+	   \centering
+	   \csvautotabular{bestFeatures.csv}
+	   \caption{The feature with the highest F value for every quality}
+	   \label{bestFeatures}
+	\end{table*}
 
 \subsection{Multi-label classification}
-Multi-label learning deals with the problem where each instance is associated
-with multiple labels simultaneously, where the number of labels is not fixed
-between instance to instance. The task of this learning paradigm is to predict
-the label (Laban quality) set for each unseen instance (skeletal recording), 
-through analyzing training instances with known label sets. The algorithm that
-was used is Adaboost with decision tree as the week classifier. In every run on
-a data set it was splitted to 80\%/20\% to train and test sets respectively.
+	Multi-label learning deals with the problem where each instance is associated
+	with multiple labels simultaneously, where the number of labels is not fixed
+	between instance to instance. The task of this learning paradigm is to predict
+	the label (Laban quality) set for each unseen instance (skeletal recording), 
+	through analyzing training instances with known label sets. The algorithm that
+	was used is Adaboost with decision tree as the week classifier. In every run on
+	a data set it was splitted to 80\%/20\% to train and test sets respectively.
+
 \section{Results}
-\subsection{Experiment 1 - Per CMA evaluation}
-In this experiment both of the train and test datasets are taken from the same
-CMA.
-\begin{figure*}[ht!]
-	\centering
-	\includegraphics[width=\textwidth, height=60mm]{oneCMAFinal.png}
-	\caption{Recall, precision and F1 score of each Laban quality separately.}
-	\label{qualities}
-\end{figure*}
+\subsection{Per CMA evaluation}
+	\begin{figure*}
+		\centering
+		\includegraphics[width=\textwidth, height=60mm]{oneCMAFinal.png}
+		\caption{Recall, precision and F1 score of each Laban quality separately.}
+		\label{oneCMAFinal}
+	\end{figure*}
 
-\begin{table}[H]
-  	\centering
-	\begin{tabular}{|p{2cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
-	\hline
-	Algorithm /Metric&Preci u-sion&Recall&F1&F1 SD\\\hline
-	Chance&0.15&0.50&0.23&0.01\\\hline
-	Nearest Neighbors&0.30&0.24&0.26&0.05\\\hline
-	LinearSVC &0.35&0.39&0.37&0.04\\\hline
-	Label Balancing&0.39&0.42&0.41&0.05\\\hline
-	LogLoss&0.40&0.43&0.43&0.04\\\hline
-	Lasso&0.41&0.48&0.44&0.05\\\hline
-	Statistic Feature Selection&0.44&0.51&0.48&0.09\\\hline
-	IG Feature Selection&0.48&0.59&0.53&0.09\\\hline
-	\end{tabular}
-	\caption{Recall, precision and F1 score of each step in the algorithm
-   development}
-   \label{oneCMASummary}
-\end{table}
+	\begin{table}[H]
+	  	\centering
+		\begin{tabular}{|p{2cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
+		\hline
+		Algorithm /Metric&Preci u-sion&Recall&F1&F1 SD\\\hline
+		Chance&0.15&0.50&0.23&0.01\\\hline
+		Nearest Neighbors&0.30&0.24&0.26&0.05\\\hline
+		LinearSVC &0.35&0.39&0.37&0.04\\\hline
+		Label Balancing&0.39&0.42&0.41&0.05\\\hline
+		LogLoss&0.40&0.43&0.43&0.04\\\hline
+		Lasso&0.41&0.48&0.44&0.05\\\hline
+		Statistic Feature Selection&0.44&0.51&0.48&0.09\\\hline
+		IG Feature Selection&0.48&0.59&0.53&0.09\\\hline
+		\end{tabular}
+		\caption{Recall, precision and F1 score of each step in the algorithm
+	   development}
+	   \label{oneCMASummary}
+	\end{table}
+	In this experiment both of the train and test datasets are taken from the same
+	CMA. The average performance over the differnt CMAs are shown in table
+	\ref{oneCMASummary}. The way that the per Laban quality performance are
+	distributed are demonstrated in figure \ref{oneCMAFinal}.
 
-\subsection{Experiment 2 - Mixed datasets evaluation}
-In this experiment the datasets of the two CMAs were mixed, and from the
-mixture both of the train and test sets were taken.
- \ref{bestFeatures}.
-\begin{figure*}[ht!]
-\centering
-\includegraphics[width=\textwidth, height=60mm]{Rachelle2Karen.png}
-\caption{Recall, precision and F1 score of each Laban quality where the train
-set is from one CMA and the test set is from another. F1 one score is 0.43}
-\end{figure*}
-\begin{document}
-\begin{table*}
-   \centering
-   \csvautotabular{bestFeatures.csv}
-   \caption{The feature with the highest F-value for every quality}
-   \label{bestFeatures}
-\end{table*}
 
-\begin{table*}
+
+
+\subsection{Mixed datasets evaluation}
+	In this experiment the datasets of all of the CMAs were mixed. In the learning
+	and testing process the source of the sample was ignored. 
+	\begin{table}[H]
+	  	\centering
+		\begin{tabular}{|p{2cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
+		\hline
+		Algorithm /Metric&Preci u-sion&Recall&F1\\\hline
+		Chance&0.15&0.50&0.23\\\hline
+		Nearest Neighbors&0.41&0.235&0.3\\\hline
+		LinearSVC &0.4&0.43&0.418\\\hline
+		Label Balancing&0.394&0.47&0.43\\\hline
+		LogLoss&0.4&0.46&0.43\\\hline
+		Lasso&0.4&0.45&0.42\\\hline
+		Statistic Feature Selection&0.462&0.69&0.55\\\hline
+		IG Feature Selection&0.46&0.71&0.56\\\hline
+		\end{tabular}
+		\caption{Recall, precision and F1 score of each step in the algorithm
+	   development}
+	   \label{mixedCMASummary}
+	\end{table}
+
+\subsection{Multi task vs Single task learning}
+We found that multitask learning for all the 18 qualities together overcome in
+its performance learning a classifier to each problem separately. For the
+multitask mission we used MultiTask Elastic Net (MEN) regularization, where the
+optimization objective for the MEN is:
+\\
+\begin{equation*}
+	\frac{1}{2n\_samples}\|Y - XW\|^2_2
+\end{equation*} 
+\begin{equation*}
+	\\+\alpha*\beta*\|W\|_{21}
+\end{equation*} 
+\begin{equation*}
+	\\+\frac{1}{2}\alpha(1 - \beta)*\|W\|^2_2
+\end{equation*}       
+\\
+$\alpha$ is generalization hyper parameter, and $\beta$ is hyper parameter
+that balance between $L_2$ norm to the $L_{21}$ norm
+Where:
+\\
+\begin{equation*}
+        \|W\|_{21} = \sum_i \sqrt{\sum_j w_{ij}^2}
+\end{equation*} 
+    i.e. the sum of norm of each row.
+
+	 \begin{table}[H]
+	  	\centering
+		\begin{tabular}{|p{1.8cm}|p{1.8cm}|p{1.8cm}|}
+		\hline
+		Metric&Multitask&Single task\\\hline
+		Precision&0.46&\textbf{0.54}\\\hline
+		Recall&\textbf{0.71}&0.7\\\hline
+		F1&0.56&\textbf{0.61}\\\hline
+		\end{tabular}
+		\caption{Multitask vs Single task learning.}
+	   \label{MultitaskVsSeparated}
+	\end{table}
+
+\subsection{Domain Adaptation}
+In this experiment the test set was taken from a subject that didn't apear in
+the train set. 
+	\begin{table}[H]
+	  	\centering
+		\begin{tabular}{|p{1.8cm}|p{1.8cm}|p{1.8cm}|}
+		\hline
+		Metric&Average&Sd\\\hline
+		Precision&0.41&0.053\\\hline
+		Recall&0.53&0.089\\\hline
+		F1&0.457&0.064\\\hline
+		\end{tabular}
+		\caption{Qualities detection performance on a never seen subject.}
+	   \label{domainAdaptationBaseLine}
+	\end{table}
+	
+\begin{table*}[h]
    \centering
    \csvautotabular{performance.csv}
    \caption{Recall, precision and F1 score of each Laban quality where the train
 set is from one CMA and the test set is from another. Average F1 one score is
 0.43}
-   \label{bestFeatures}
+   \label{performance}
 \end{table*}
-
-\subsection{Experiment 3}
-In this experiment the train set was taken from one CMAm while the test set
-was taken from another. The precision, recall and F1 scores where 0.57, 
-0.42 and 0.43 respectivaly. The best features are represented in table
-\begin{figure*}[ht!]
-\centering
-\includegraphics[width=\textwidth, height=60mm]{mixture.png}
-\caption{Recall, precision and F1 score of each Laban quality where the train
-set is from one CMA and the test set is from another. F1 one score is 0.37}
-\label{qualities}
-\end{figure*}
 
 \begin{thebibliography}{1}
 \bibliographystyle{alpha}

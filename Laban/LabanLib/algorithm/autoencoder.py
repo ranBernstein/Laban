@@ -60,8 +60,8 @@ class Autoencoder:
     def scoreOnDS(self, ds):
         Y = np.array([y for x,y in ds])
         trainVec = self.supervisedNet.activateOnDataset(ds)
-        #dif = np.abs(np.subtract(Y, trainVec))
-        #trainRes = float(sum(sum(dif)))/Y.shape[0]/Y.shape[1]
+        #trainDif = np.abs(np.subtract(Y, trainVec))
+        #trainRes = float(sum(sum(trainDif)))/Y.shape[0]/Y.shape[1]
         splits = []
         for col in range(trainVec.shape[1]):
             bestSplit, bestF1 = labanUtil.getSplitThreshold(trainVec[:, col], Y[:, col])
@@ -165,13 +165,13 @@ class Autoencoder:
                 #cvResults.append(cv.validate())
                 trainVec = n.activateOnDataset(ds)
                 #print trainVec[0]
-                dif = np.abs(np.subtract(Y, trainVec))
+                trainDif = np.abs(np.subtract(Y, trainVec))
                 difdif = np.abs(np.subtract(lastTrainVec, trainVec))
                 lastTrainVec = copy.deepcopy(trainVec)
-                #print dif
-                trainRes = float(sum(sum(dif)))/Y.shape[0]/Y.shape[1]
+                #print trainDif
+                trainRes = float(sum(sum(trainDif)))/Y.shape[0]/Y.shape[1]
                 print 'epoch num:', epochNum
-                print 'dif sum: ', sum(sum(dif))
+                print 'trainDif sum: ', sum(sum(trainDif))
                 print 'trainVec sum: ', sum(sum(np.abs(trainVec)))
                 print 'difdif sum: ', sum(sum(difdif))
                 print 'hiddenSize: ', hiddenSize

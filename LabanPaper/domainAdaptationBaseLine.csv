@@ -1,0 +1,9 @@
+,,,,,Average,Sd
+Train,Rachelle,,Rachelle,Rachelle,,
+Train,Milca,Milca,,Milca,,
+Train,Sharon,Sharon,Sharon,,,
+Train,,Karen,Karen,Karen,,
+Test,Karen,Rachelle,Milca,Sharon,,
+Precision,0.48,0.392,0.397,0.354,0.40575,0.05309347104
+Recall,0.59,0.562,0.558,0.394,0.526,0.08914407814
+F1,0.53,0.46,0.46,0.37,0.4570145802,0.0642213862
