@@ -64,6 +64,7 @@ Rhythmicity, Spread,  Rotation  h15
 Rhythmicity, Up+Rise, Rotation  h16
 Spread,  Free+Light,  Up+Rise    h17
 Spread,  Free+Light,  Rotation  h18
+Spread,  Free+Light,  Rotation, Up+Rise h21
 Spread,  Up+Rise, Rotation  h19
 Free+Light,  Up+Rise, Rotation  h20
 

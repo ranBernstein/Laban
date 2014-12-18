@@ -308,13 +308,13 @@ multitask mission we used MultiTask Elastic Net (MEN) regularization, where the
 optimization objective for the MEN is:
 \\
 \begin{equation*}
-	\frac{1}{2n\_samples}\|Y - XW\|^2_2
+	\frac{1}{2n\_samples}\|Y - XW\|^2_F
 \end{equation*} 
 \begin{equation*}
-	\\+\alpha*\beta*\|W\|_{21}
+	\\+\alpha\cdot\beta\cdot\|W\|_{21}
 \end{equation*} 
 \begin{equation*}
-	\\+\frac{1}{2}\alpha(1 - \beta)*\|W\|^2_2
+	\\+\frac{1}{2}\alpha\cdot(1 - \beta)\cdot\|W\|^2_F
 \end{equation*}       
 \\
 $\alpha$ is generalization hyper parameter, and $\beta$ is hyper parameter
@@ -324,18 +324,29 @@ Where:
 \begin{equation*}
         \|W\|_{21} = \sum_i \sqrt{\sum_j w_{ij}^2}
 \end{equation*} 
-    i.e. the sum of norm of each row.
+    i.e. the sum of norm of each row, and 
+\begin{equation*}
+        \|W\|^2_F = \sum_i{\sum_j w_{ij}^2}
+\end{equation*}     
+	i.e. the Frobenius norm. 
 
-	 \begin{table}[H]
+Feature selection was made by averaging the statistical signifcance of each
+feature with a respect to different task (Not like in the single task learnig
+flow, there every task had its own feature selection). As it seen in table
+\ref{MultitaskVsSeparated} the multi task setting improved the F score in 7\%,
+fact that indicates that the tasks are correlated and that more might be learned
+from the small dataset when using this setting.
+ \begin{table}[H]
 	  	\centering
 		\begin{tabular}{|p{1.8cm}|p{1.8cm}|p{1.8cm}|}
 		\hline
-		Metric&Multitask&Single task\\\hline
-		Precision&0.46&\textbf{0.54}\\\hline
-		Recall&\textbf{0.71}&0.7\\\hline
-		F1&0.56&\textbf{0.61}\\\hline
+		Metric&Single task&Multitask\\\hline
+		Precision&0.46&\textbf{0.61}\\\hline
+		Recall&\textbf{0.71}&0.65\\\hline
+		F1&0.56&\textbf{0.63}\\\hline
 		\end{tabular}
-		\caption{Multitask vs Single task learning.}
+		\caption{Multitask vs Single task learning performance evaluation on mixture
+		of CMAs dataset.}
 	   \label{MultitaskVsSeparated}
 	\end{table}
 
@@ -346,12 +357,14 @@ the train set.
 	  	\centering
 		\begin{tabular}{|p{1.8cm}|p{1.8cm}|p{1.8cm}|}
 		\hline
-		Metric&Average&Sd\\\hline
+		Metric&Average Score&Standard deviation\\\hline
 		Precision&0.41&0.053\\\hline
 		Recall&0.53&0.089\\\hline
 		F1&0.457&0.064\\\hline
 		\end{tabular}
-		\caption{Qualities detection performance on a never seen subject.}
+		\caption{Qualities detection performance on a never seen subject. In every
+		trial one CMA was the testset, while the classifier was learned from the
+	rest of the CMAs.}
 	   \label{domainAdaptationBaseLine}
 	\end{table}
 	
