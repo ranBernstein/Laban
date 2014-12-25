@@ -8,6 +8,7 @@
 \usepackage{array}
 \usepackage{float}
 \usepackage{amsmath}
+\usepackage{pgfplotstable}
 \begin{filecontents}{oneCMASummary.csv}
 \end{filecontents}
 
@@ -17,7 +18,7 @@
 \author{Ran Bernstein \\
 \texttt{ranb@cs.technion.ac.il} \\
 Department of Computer Science, Technion I.I.T, Haifa, Israel}
-\title{Laban movement recognition from markerless motion capture sensor}
+\title{Laban Movement Analysis using Kinect Sensor and Transfer Learning}
 \maketitle
 \begin{quote}{``Man moves in order to satisfy a need.`` ---\textup{Rudolph Laban}}
 \end{quote}
@@ -27,12 +28,12 @@ over the past seventy years, is an effective method for observing, describing, n
 movement to enhance communication and expression in everyday and professional life.
 Many applications that use motion capture data might be significantly
 leveraged if the Laban qualities will be recognized automatically.
-This paper presents an automated recognition method of Laban qualities from
-motion capture skeletal recordings and it is demonstrated on the output of
-Microsoft's Kinect V2 sensor.}
+This paper presents an automated machine learning based method of recognition of
+Laban qualities from motion capture skeletal recordings. The method is
+demonstrated on the output of Microsoft's Kinect V2 sensor.}
 \end{abstract}
 \section{Introduction}
-\subsection{Laban movement analysis}
+\subsection{Motivation for LMA}
 LMA is a formal language for motion description 
 invented by Rudolf Laban \cite{Laban} in the middle of the 20th 
 century. LMA describes, interprets and documents mental 
@@ -58,7 +59,7 @@ Time: Sudden or Sustained
 Weight: Strong or Light 
 \end{itemize}
 The whole hierarchy of LMA is described in figure number \ref{laban}.
-\begin{figure*}[h]
+\begin{figure*}[ht]
 \centering
 \includegraphics[width=\textwidth]{laban.png}
 \caption{Laban movement analysis main axes.}
@@ -88,20 +89,37 @@ Once the skeleton is detected, the 3D coordinates of all joints of user’s body
 – with the exception of joints, that are not visible (e.g. a user’s hand is
 behind his back) are provided.
 As seen in figure \ref{Coordinate}, the coordinates are in a “real-world”
-coordinate system, that has the beginning [0,0,0] in the sensor, x,y and z-axis goes as shown on the picture below and the units are milimeters. 
+coordinate system, that has the beginning [0,0,0] in the sensor, x,y and z-axis goes as shown on the picture below and the units are millimeters. 
 \begin{figure}[h]
 \centering
 \includegraphics[width=60mm]{KinectV2CoordinateSystem.jpg}
 \caption{Kinect Coordinate System}
 \label{Coordinate}
 \end{figure}
-\section{Method}
-\subsection{Dataset collection}
-The dataset was created by recording 5 Certified Movements Analysts (CMA)
-performing random movements with several Laban qualities. Every clip is about
-3 seconds long that were captured by the Kinect.
-here goes table with an elaboration about the amount of every quality every 
 
+
+\section{Dataset Creation and Extraction}
+\subsection{Clips Collection}
+Two main datasets were collected: 
+\begin{itemize}
+  	\item 
+	CMAs dataset - includes 7 CMAs performing in about
+	of 80 clips each (550 clips total). Every clip is 3 seconds long, and the CMA
+	performs random activity in it. To achieve uniform distribution of the Laban
+	qualities over the dataset, in every clip the CMA was asked to perform
+	several specific qualities, and nothing but them.
+	\item 
+	Non CMAs dataset - includes 3 subjects without a background in movement
+	analysis, performing 18 clips each. Every clip is 3 seconds long too, where the
+	in every clip the subject was asked to perform one out of two operations.
+\end{itemize}
+\subsection{Clips Labeling}
+To achieve a ground truth labeling for the two datasets, every clip was tagged by
+a committee of 2-3 CMAs that determined which Laban qualities appear in the
+clip. The usage of a committee decision instead of the subjective opinion of one
+CMA decreases the labeling noise and considered as ground truth, especially for
+the fact that there is no really ground truth in such a non quantitative mission
+as the LMA.
 \subsection{Feature Extraction}
 Due to unequal length of clips, all the features that were extracted are in
 whole clip granularity.
@@ -109,7 +127,7 @@ whole clip granularity.
 For every joint in the skeleton the angular velocity, acceleration and jerk were
 extracted, and for each one of them the mean, variance, skew and kurtosis were
 extracted (the extraction of the last four moments is denoted as $\phi$). 
-\subsubsection{Shape: Sagital}
+\subsubsection{Shape: Sagittal}
 In this quality a separation between Advance and Retreat. The quantification of
 this quality was done by projecting the speed vector of the Center Of Mass (COM)
 on the vector of the front of the body. The COM was approximated in this case
@@ -141,7 +159,7 @@ Here the separation is between spreading and enclosing in the horizontal axe.
 This quality was quantified by measuring the average distance of the joint from
 the the vertical axe of the body that spreads from the Head (H) along the Spine
 Base (SB).
-This axe was approximated with the Kinect's horizontal axe(y), what made the
+This axe was approximated with the Kinect's horizontal axis(y), what made the
 distance measured in the projection of the joints on the XZ plane.
 \\
 \\$d_{j} = \frac{\left|(\vec{P}_{j}-\vec{P}_{SB})\times
@@ -194,7 +212,7 @@ with the usage of F one score:
 \\$F_{1} = \frac{2\cdot precision\cdot recall}{precision+recall}$
 \subsection{Feature Selection}
 	Every clip is extracted into a vector of 6120 features. Most of
-	them are noisy or redundent. For that reason a massive feature selection is
+	them are noisy or redundant. For that reason a massive feature selection is
 	needed. The feature selection is done in three stages:
 	\begin{itemize}
 		\item
@@ -207,7 +225,7 @@ with the usage of F one score:
 			\includegraphics[width=60mm]{featureSelection.png}
 			\caption{Influence of the percent of features that were used on the F1 score.
 			The blue line is the difference between the score with an without feature
-			selection. It can be seen that the optimal amount to slecet is 2\% 
+			selection. It can be seen that the optimal amount to select is 2\% 
 			}
 			\label{selection}
 			\end{figure}
@@ -218,7 +236,7 @@ with the usage of F one score:
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width=60mm]{igFromFclassif.png}
-			\caption{Influance of the proportion of Information based selection from the
+			\caption{Influence of the proportion of Information based selection from the
 			subset chosen by the ANOVA selection.}
 			\label{igFromFclassif}
 		\end{figure}
@@ -226,38 +244,45 @@ with the usage of F one score:
 		The third phase of feature section was made by Least Absolute Shrinkage and
 		Selection Operator (LASSO).
 	\end{itemize}
-	Example for Features and their significanse is shown in table
-	number \ref{bestFeatures}.
-	\begin{table*}[h]
+	Example for qualities and their most significant Features is shown in 
+	table number \ref{bestFeatures}. The ``Information Gain'' metric that is used
+	in the table, is defined:
+	\begin{equation*}
+	       IG(T,f) = H(T) - H(T|f)
+	\end{equation*} 
+	Where T is the training set, f is a feature and H() is the information
+	entropy of a dataset.
+	 \begin{table*}[ht]
 	   \centering
-	   \csvautotabular{bestFeatures.csv}
-	   \caption{The feature with the highest F value for every quality}
+	   \csvautotabular{rankFeatures.csv}
+	   \caption{Example for several qualities and the feature that has been found
+	   the most informative for them. ``Relative position'' stands for the
+	   position of the joint relatively to ancestor joint in the joints hierarchy.}
 	   \label{bestFeatures}
 	\end{table*}
 
+\section{Experimental Setups and Results}
 \subsection{Multi-label classification}
-	Multi-label learning deals with the problem where each instance is associated
-	with multiple labels simultaneously, where the number of labels is not fixed
-	between instance to instance. The task of this learning paradigm is to predict
-	the label (Laban quality) set for each unseen instance (skeletal recording), 
-	through analyzing training instances with known label sets. The algorithm that
-	was used is Adaboost with decision tree as the week classifier. In every run on
-	a data set it was splitted to 80\%/20\% to train and test sets respectively.
-
-\section{Results}
+Multi-label learning deals with the problem where each instance is associated
+with multiple labels simultaneously, where the number of labels is not fixed
+between instance to instance. The task of this learning paradigm is to predict
+the label (Laban quality) set for each unseen instance (skeletal recording), 
+through analyzing training instances with known label sets. The multilabel
+approach that was taken in this paper is to break the whole LMA problem into 18
+binary classification tasks - one for every Laban quality - where every binary
+decision is if the quality exists or not.
+\\The next following subsections will be describe several experimental setups
+where the results in every one will stand as a base line for the next setup.
 \subsection{Per CMA evaluation}
-	\begin{figure*}
-		\centering
-		\includegraphics[width=\textwidth, height=60mm]{oneCMAFinal.png}
-		\caption{Recall, precision and F1 score of each Laban quality separately.}
-		\label{oneCMAFinal}
-	\end{figure*}
-
+	In this experiment both of the train and test datasets are taken from the same
+	CMA. The average performance over the different CMAs are shown in table
+	\ref{oneCMASummary}. The way that the per Laban quality performance are
+	distributed are demonstrated in figure \ref{oneCMAFinal}.
 	\begin{table}[H]
 	  	\centering
-		\begin{tabular}{|p{2cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
+		\begin{tabular}{|p{1.6cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
 		\hline
-		Algorithm /Metric&Preci u-sion&Recall&F1&F1 SD\\\hline
+		Algorithm /Metric&Preci-sion&Recall&F1&F1 SD\\\hline
 		Chance&0.15&0.50&0.23&0.01\\\hline
 		Nearest Neighbors&0.30&0.24&0.26&0.05\\\hline
 		LinearSVC &0.35&0.39&0.37&0.04\\\hline
@@ -268,25 +293,27 @@ with the usage of F one score:
 		IG Feature Selection&0.48&0.59&0.53&0.09\\\hline
 		\end{tabular}
 		\caption{Recall, precision and F1 score of each step in the algorithm
-	   development}
+		development. Every CMA was evaluated separably. The
+		results are the average performance and standard deviation (SD) over the CMAs.}
 	   \label{oneCMASummary}
 	\end{table}
-	In this experiment both of the train and test datasets are taken from the same
-	CMA. The average performance over the differnt CMAs are shown in table
-	\ref{oneCMASummary}. The way that the per Laban quality performance are
-	distributed are demonstrated in figure \ref{oneCMAFinal}.
 
-
-
-
+	\begin{figure*}[ht!]
+		\centering
+		\includegraphics[width=\textwidth, height=60mm]{oneCMAFinal.png}
+		\caption{Recall, precision and F1 score of each Laban quality separately.}
+		\label{oneCMAFinal}
+	\end{figure*}
+	
 \subsection{Mixed datasets evaluation}
 	In this experiment the datasets of all of the CMAs were mixed. In the learning
-	and testing process the source of the sample was ignored. 
-	\begin{table}[H]
+	and testing process the origin (CMA) of the sample was ignored. 
+\subsubsection{Single task learning as a baseline}
+	\begin{table}[ht!]
 	  	\centering
-		\begin{tabular}{|p{2cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
+		\begin{tabular}{|p{1.6cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
 		\hline
-		Algorithm /Metric&Preci u-sion&Recall&F1\\\hline
+		Algorithm /Metric&Preci-sion&Recall&F1\\\hline
 		Chance&0.15&0.50&0.23\\\hline
 		Nearest Neighbors&0.41&0.235&0.3\\\hline
 		LinearSVC &0.4&0.43&0.418\\\hline
@@ -300,25 +327,19 @@ with the usage of F one score:
 	   development}
 	   \label{mixedCMASummary}
 	\end{table}
-
-\subsection{Multi task vs Single task learning}
+		
+\subsubsection{Multi task vs Single task learning}
 We found that multitask learning for all the 18 qualities together overcome in
 its performance learning a classifier to each problem separately. For the
-multitask mission we used MultiTask Elastic Net (MEN) regularization, where the
+multitask mission we used Multitask Elastic Net (MEN) regularization, where the
 optimization objective for the MEN is:
 \\
 \begin{equation*}
-	\frac{1}{2n\_samples}\|Y - XW\|^2_F
-\end{equation*} 
-\begin{equation*}
-	\\+\alpha\cdot\beta\cdot\|W\|_{21}
-\end{equation*} 
-\begin{equation*}
-	\\+\frac{1}{2}\alpha\cdot(1 - \beta)\cdot\|W\|^2_F
+	\|Y - XW\|^2_F+\lambda_1\cdot\|W\|_{2,1}+\lambda_1\cdot\|W\|^2_F
 \end{equation*}       
 \\
-$\alpha$ is generalization hyper parameter, and $\beta$ is hyper parameter
-that balance between $L_2$ norm to the $L_{21}$ norm
+$\lambda_1$ is generalization hyper parameter, and $\lambda_2$ is hyper
+parameter that balance between the $L_{2,1}$ and the rest.
 Where:
 \\
 \begin{equation*}
@@ -330,28 +351,49 @@ Where:
 \end{equation*}     
 	i.e. the Frobenius norm. 
 
-Feature selection was made by averaging the statistical signifcance of each
-feature with a respect to different task (Not like in the single task learnig
+Feature selection was made by averaging the statistical significance of each
+feature with a respect to different task (Not like in the single task learning
 flow, there every task had its own feature selection). As it seen in table
-\ref{MultitaskVsSeparated} the multi task setting improved the F score in 7\%,
+\ref{MultitaskVsSeparated} the multitask setting improved the F score in 7\%,
 fact that indicates that the tasks are correlated and that more might be learned
-from the small dataset when using this setting.
- \begin{table}[H]
+from the small dataset when using this setting.	
+ 	\begin{table}[H]
 	  	\centering
 		\begin{tabular}{|p{1.8cm}|p{1.8cm}|p{1.8cm}|}
 		\hline
 		Metric&Single task&Multitask\\\hline
-		Precision&0.46&\textbf{0.61}\\\hline
+		Precision&0.46&\textbf{0.59}\\\hline
 		Recall&\textbf{0.71}&0.65\\\hline
-		F1&0.56&\textbf{0.63}\\\hline
+		F1&0.56&\textbf{0.6}\\\hline
 		\end{tabular}
 		\caption{Multitask vs Single task learning performance evaluation on mixture
 		of CMAs dataset.}
 	   \label{MultitaskVsSeparated}
 	\end{table}
 
+\subsubsection{Per quality performance in multitask setting}
+	\begin{figure*}[ht]	
+		\centering
+		\pgfplotstabletypeset[
+	    col sep=comma,
+	    string type,
+	    every head row/.style={before row=\hline,after row=\hline},
+	    every last row/.style={before row=\hline,after row=\hline},
+	    columns/Quality/.style={column type={|l|}},
+     	columns/Precision/.style={column type={c}, column type/.add={}{|}},
+     	columns/Recall/.style={column type={c}, column type/.add={}{|}},
+     	columns/F1 score/.style={column type={c}, column type/.add={}{|}}, 
+     	]{mixedSummary.csv}
+	    \caption{Recall, precision and F1 score of each Laban quality on a CMA
+		   mixture dataset. The learning was done in a multitask setting. The number of
+		   features that didn't become zero after the mixed norm regularization is
+		   282 (same features for all of the tasks). The F1 average and standard
+		   deviation over the qualities is shown in the last row of the table.}
+		   \label{mixedSummary}
+	\end{figure*}
+
 \subsection{Domain Adaptation}
-In this experiment the test set was taken from a subject that didn't apear in
+In this experiment the test set was taken from a subject that didn't appear in
 the train set. 
 	\begin{table}[H]
 	  	\centering
@@ -363,19 +405,10 @@ the train set.
 		F1&0.457&0.064\\\hline
 		\end{tabular}
 		\caption{Qualities detection performance on a never seen subject. In every
-		trial one CMA was the testset, while the classifier was learned from the
+		trial one CMA was the test set, while the classifier was learned from the
 	rest of the CMAs.}
 	   \label{domainAdaptationBaseLine}
 	\end{table}
-	
-\begin{table*}[h]
-   \centering
-   \csvautotabular{performance.csv}
-   \caption{Recall, precision and F1 score of each Laban quality where the train
-set is from one CMA and the test set is from another. Average F1 one score is
-0.43}
-   \label{performance}
-\end{table*}
 
 \begin{thebibliography}{1}
 \bibliographystyle{alpha}

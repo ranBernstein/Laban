@@ -12,8 +12,8 @@ import LabanLib.LabanUtils.combinationsParser as cp
 from sklearn.feature_selection import f_classif, SelectKBest, f_regression,RFECV
 from sklearn.linear_model import MultiTaskLassoCV, \
     MultiTaskElasticNetCV, MultiTaskElasticNet, MultiTaskLasso
-
-CMAs = ['Rachelle', 'Milca', 'Sharon', 'Karen']
+from collections import defaultdict
+CMAs = ['Rachelle', 'Milca', 'Sharon', 'Karen','Michal','Tara']
 ds, featuresNames = labanUtil.accumulateCMA(CMAs) 
 splitProportion=0.1
 #for e in params:
@@ -21,8 +21,8 @@ testNum =10
 params = range(500,800,50)
 #params = np.linspace(0,1,10)
 #params = np.logspace(-11, -6, 20)
-precisions = []
-recalls = []
+#precisions = []
+#recalls = []
 testFs = []
 trainFs = []
 #for selectedFeaureNum in params:
@@ -31,6 +31,16 @@ rs = []
 teFs = []
 trFs = []
 selectedFeaureNum=500
+perQualityF = defaultdict(lambda:[])
+perQualityP = defaultdict(lambda:[])
+perQualityR = defaultdict(lambda:[])
+perQualityS = defaultdict(lambda:[])
+qualities, combinations = cp.getCombinations()
+
+performance = open('multiTaskPerformance.csv', 'w')
+performance.flush()
+performance.write('Quality, Precision, Recall, F1 score\n')
+
 for test in range(testNum):
     tstdata, trndata = ds.splitWithProportion( splitProportion )
     #trndata = ds
@@ -42,11 +52,7 @@ for test in range(testNum):
     def scorer(pipe, X, y):
         pred = pipe.predict(X)
         return metrics.f1_score(y, pred)
-    
-    #cvs = []
-    #params = range(225,265)#np.linspace(0.1, 1, 10)
-    #params = np.logspace(-12,-9, 15)
-    #selectedFeaureNum =int(e)
+
     accum = np.zeros((X.shape[1],))
     for y in np.transpose(Y):
         selector = SelectKBest(f_classif, selectedFeaureNum)
@@ -79,6 +85,23 @@ for test in range(testNum):
     r = np.mean(rs)
     f= 2*p*r/(p+r)
     print  p, r, f
+    
+    print clf.coef_.shape
+    for q, p, y_test, coefs in zip(qualities, np.transpose(pred),
+        np.transpose(Y_test), clf.coef_):
+        perQualityF[q].append(metrics.f1_score(y_test, p))
+        perQualityP[q].append(metrics.precision_score(y_test, p))
+        perQualityR[q].append(metrics.recall_score(y_test, p))
+        perQualityS[q].append(len([c for c in coefs if c!=0]))
+
+for q in qualities:
+    performance.write(q
+                      +', '+ str(round(np.mean(perQualityP[q]),3))\
+                      +', '+ str(round(np.mean(perQualityR[q]),3))\
+                      +', '+ str(round(np.mean(perQualityF[q]), 3))\
+                      #+', '+ str(np.mean(perQualityS[q]))\
+                      +'\n')
+performance.close()
 #precisions.append(np.mean(ps))
 #recalls.append(np.mean(rs))
 p = np.mean(ps)
@@ -92,11 +115,11 @@ trainFs.append(np.mean(trFs))
 #       scoring=scorer, cv=2, verbose=True)))
 #print params
 print testNum
-print precisions
-print recalls
-p = np.mean(precisions)
-r = np.mean(recalls)
-f= 2*p*r/(p+r)
+#print precisions
+#print recalls
+#p = np.mean(precisions)
+#r = np.mean(recalls)
+#f= 2*p*r/(p+r)
 print  p, r, f
 print testFs
 print trainFs
@@ -106,13 +129,13 @@ des+=' testNum '+str(testNum)
 #des+=' e ' + str(e)
 print des
 #semilogx
-plt.scatter(range(testNum), testFs)
 """
+plt.scatter(range(testNum), testFs)
 plt.plot(params, trainFs, label='TrainEs F1, max: '+str(max(trainFs)))
 plt.plot(params, testFs, label='TestEs F1, max: '+str(max(testFs)))
 #plt.plot(params, cvs, label='TestEs F1, max: '+str(max(cvs)))
 plt.xlabel('selectedFeaureNum')
 plt.legend().draggable()
 plt.title(des)
-"""
 plt.show()
+"""

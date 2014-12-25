@@ -1,0 +1,19 @@
+Quality, Feature Name, Operator, Information Gain, p-value
+Advance, Position of ShoulderLeft_Y velocity , mean abs, 0.05, 3.2e-05
+ArmsToUpperBody, Position of SpineBase_Y velocity , max, 0.1, 3.8e-06
+Bind, Position of ElbowLeft_Yafter LPF  , max, 0.09, 4.3e-08
+Condense+Enclose, Position of SpineBase_Y , max, 0.08, 2.4e-07
+Direct, Position of ElbowLeft_Y velocity , max, 0.06, 3.9e-06
+Free+Light, ElbowLeft angle  , min, 0.16, 1.1e-24
+Head-drop, Position of FootLeft_X velocity , max, 0.11, 8.4e-12
+Jump, Position of SpineBase_Y , max, 0.28, 3.0e-50
+Passive, ElbowLeft angle  , min, 0.11, 3.3e-12
+Retreat, Position of ElbowRight_Y velocity , mean abs, 0.08, 3.1e-09
+Rhythmicity, Position of SpineBase_Y , max, 0.16, 1.5e-11
+Rotation, Position of ShoulderLeft_Z acceleration , std, 0.21, 4.8e-46
+Sink, Position of ElbowRight_X , max abs, 0.11, 1.1e-13
+Spread, Position of ElbowLeft_X , mean square, 0.25, 2.2e-49
+Strong, KneeRight angle  , max, 0.05, 1.0e-06
+Sudden, Position of FootRight_X , min, 0.05, 5.6e-05
+Twist+Back, Position of FootRight_X , std, 0.1, 3.0e-09
+Up+Rise, Position of ElbowLeft_Y , max, 0.2, 3.0e-31

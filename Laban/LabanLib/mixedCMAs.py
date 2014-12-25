@@ -52,8 +52,8 @@ if __name__ == '__main__':
                         ('wrapper_selection', ig_wrapper),
                         ('classification', clf)
                         ])
-        from sklearn.neighbors import KNeighborsClassifier
-        pipe = KNeighborsClassifier()
+        #from sklearn.neighbors import KNeighborsClassifier
+        #pipe = KNeighborsClassifier()
         pipe.fit(X, y)
         print qualities[i]
         #fs+= cross_validation.cross_val_score(pipe, X, y=y,
