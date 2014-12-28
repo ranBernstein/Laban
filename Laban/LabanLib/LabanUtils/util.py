@@ -108,6 +108,20 @@ def getSplitThreshold(x, y):
             bestF1 = f1
     return bestSplit, bestF1
 
+def getSplits(X, Y):
+    splits = []
+    for col in range(X.shape[1]):
+        bestSplit, bestF1 = getSplitThreshold(X[:, col], Y[:, col])
+        splits.append(bestSplit)
+    return splits
+
+import copy
+def quantisizeBySplits(pred_p, splits):
+    pred = copy.copy(pred_p)
+    for col in range(pred.shape[1]):
+        pred[:, col] = [1 if e>=splits[col] else 0 for e in pred[:, col]]
+    return pred
+
 def accumulateCMA(CMAs):
     trndatas = None
     for trainSource in CMAs:
@@ -118,3 +132,59 @@ def accumulateCMA(CMAs):
             for s in trndata:
                 trndatas.appendLinked(*s)
     return trndatas, featuresNames
+
+import os, os.path
+def getNonCMAs(nonCMAs, qualities):
+    counter = np.zeros((len(qualities)))
+    X, Y = [], []
+    for nc in nonCMAs:
+        dirtocheck = './recordings/'+nc
+        for root, _, files in os.walk(dirtocheck):
+            for f in files:
+                qs = f.split('.')[0]
+                qs = qs.split('_')
+                y = np.zeros((len(qualities)))
+                for q in qs:
+                    if q in qualities:
+                        y[qualities.index(q)] = 1
+                        counter[qualities.index(q)] +=1
+                fileName = os.path.join(root, f)
+                x, featuresNames = ge.getFeatureVec(fileName, False)
+                X.append(x), Y.append(y)
+    return np.array(X), np.array(Y), counter
+
+from sklearn.feature_selection import f_classif, SelectKBest, f_regression,RFECV
+from sklearn.linear_model import MultiTaskElasticNetCV, MultiTaskElasticNet
+def getMultiTaskclassifier(X, Y):
+    selectedFeaureNum=500
+    accum = np.zeros((X.shape[1],))
+    for y in np.transpose(Y):
+        selector = SelectKBest(f_classif, selectedFeaureNum)
+        selector = selector.fit(X, y)
+        accum += selector.pvalues_
+    selectedIndices = accum.argsort()[:selectedFeaureNum]
+    def transform(X):
+        return X[:, selectedIndices]     
+    X_filtered = transform(X)
+    clf = MultiTaskElasticNetCV(normalize=True)
+    clf.fit(X_filtered, Y)
+    return clf
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

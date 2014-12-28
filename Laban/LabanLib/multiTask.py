@@ -1,7 +1,6 @@
-from sklearn import linear_model
 import numpy as np
 import LabanUtils.util as labanUtil
-from sklearn import metrics, svm
+from sklearn import metrics
 import matplotlib.pyplot as plt
 from pybrain.supervised.trainers import BackpropTrainer
 from sklearn.pipeline import Pipeline

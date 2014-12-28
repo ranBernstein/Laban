@@ -426,24 +426,27 @@ different unknown distribution, $p(x|\theta)$. Training and test distribution
 may differ arbitrarily, but there is only one unknown
 target conditional class distribution $p(y|x)$.
 \subsubsection{Instance  Weighting}
-If $t$ is number of tasks that we handle and $d$ is our input dimension, except
-to the mulititask classifier $W_{d \times t}$, we will learn an instance
-weighting $V_{m \times t}$ matrix, that will assign a weight for every instance in
-\testbf{every task}.
-Lets define $\Gamma_{(m+n)\times t}$ as a matrix such as:
+Lets denote the tuple $(X_{source}, Y_{source})$ is our labled source dataset 
+of lenght $m$, $X_{target}$ our unlabeled target dataset of lenght $n$, and the
+concatination of the last two as $X$, and we will define $R_{(m+n) \times t}$
+such as:
 \[
-    \gamma_{i,j}=
+    \R_{i,j}=
 \begin{cases}
-    0,& \text{if } (x_i,y_i) \in L\\
-    1,& \text{if } x_i \in T
+    0,& \text{if } 0<i<=m\\
+    1,& \text{if }  m < i <= m+n
 \end{cases}
 \]
-So if our training set is $L=(X,Y)$, when inserting $V$ to the multitask elastic
+i.e. $r$ assigns 0 for every source sample and 1 for very target.
+//
+If $t$ is number of tasks that we handle and $d$ is our input dimension, except
+to the mulititask classifier $W_{d \times t}$, we will learn an instance weighting $V_{d \times t}$ matrix, that will assign a weight for every instance in \testbf{every task}.
+ when inserting $V$ to the multitask elastic
 net framework, we get:
 \\\textbf{Optimization Problem: }\textit{Over all W, and V, minimize:}
 \begin{equation*}
-	\|V^T(Y - XW)\|^2_F + \lambda_1\cdot\|W\|_{2,1} + \lambda_1\cdot\|W\|^2_F +
-	\lambda_3\cdot\|V-\Gamma\|^2_F
+	\|X_{source}V(Y_{source} - X_{source}W)\|^2_F + \lambda_1\cdot\|W\|_{2,1} +
+	\lambda_2\cdot\|W\|^2_F + \lambda_3\cdot\|XV-R\|^2_F
 \end{equation*}
 i.e. learning both of the classifier and the instance weighting for all
 of the tasks together.

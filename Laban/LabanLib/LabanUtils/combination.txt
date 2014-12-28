@@ -1,21 +1,21 @@
 
 ArmsToUpperBody,  Bind,  Sink s15
-ArmsToUpperBody,  Condense+Enclose,  Head-drop, Passive s12
-ArmsToUpperBody, Condense+Enclose,  Head-drop,  Sink s14
+ArmsToUpperBody,  Condense+Enclose,  HeadDrop, Passive s12
+ArmsToUpperBody, Condense+Enclose,  HeadDrop,  Sink s14
 ArmsToUpperBody, Condense+Enclose,  Retreat,  Sink s17
 ArmsToUpperBody,  Condense+Enclose, Twist+Back s16
 ArmsToUpperBody, Condense+Enclose,  Passive, Sink s20
-ArmsToUpperBody,  Head-drop  s10
-ArmsToUpperBody,  Head-drop,  Passive  s4
-ArmsToUpperBody  Head-drop,  Passive,  Sink,  s1
-ArmsToUpperBody,  Head-drop,  Sink   s5
+ArmsToUpperBody,  HeadDrop  s10
+ArmsToUpperBody,  HeadDrop,  Passive  s4
+ArmsToUpperBody  HeadDrop,  Passive,  Sink,  s1
+ArmsToUpperBody,  HeadDrop,  Sink   s5
 ArmsToUpperBody,   Passive  s6
 ArmsToUpperBody,  Passive,  Sink  s2
 ArmsToUpperBody,  Sink  s9
-Head-drop,  Passive  s8  
-Head-drop,  Passive,   Retreat,  Sink s13
-Head-drop,  Passive,   Sink  s3
-Head-drop,  Sink  s11
+HeadDrop,  Passive  s8  
+HeadDrop,  Passive,   Retreat,  Sink s13
+HeadDrop,  Passive,   Sink  s3
+HeadDrop,  Sink  s11
 Passive,  Sink  s7
 Passive,  Sink, Condense+Enclose  s18
 
