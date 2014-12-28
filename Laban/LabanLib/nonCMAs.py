@@ -1,7 +1,7 @@
 import LabanLib.LabanUtils.combinationsParser as cp
 import numpy as np
 import LabanLib.LabanUtils.util as labanUtil
-
+print 'kuku'
 qualities, combinations = cp.getCombinations()
 nonCMAs = ['Gal','Ayelet']
 
