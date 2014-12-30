@@ -17,18 +17,20 @@ for x,y in zip(X, Y):
 CMAs = ['Rachelle', 'Milca', 'Sharon', 'Karen','Michal','Tara']
 ds, featuresNames = labanUtil.accumulateCMA(CMAs) 
 X, Y = labanUtil.getXYfromPybrainDS(ds)
-clf = labanUtil.getMultiTaskclassifier(X, Y)
-splits = labanUtil.getSplits(X, Y)
-pred = clf.predict(X_test)
-pred = labanUtil.quantisizeBySplits(pred, splits)
+clf, transformer = labanUtil.getMultiTaskclassifier(X, Y)
+X_filtered  = transformer(X)
+splits = labanUtil.getSplits(clf.predict(X_filtered), Y)
+X_test_filtered = transformer(X_test)
+Pred = clf.predict(X_test_filtered)
+Pred = labanUtil.quantisizeBySplits(Pred, splits)
 from sklearn import metrics
 performance = open('nonCMAs.csv', 'w')
 performance.flush()
 performance.write('Quality, Precision, Recall, F1 score\n')
-for q, p, y_test in zip(qualities, np.transpose(pred), np.transpose(Y_test)):
-    f = metrics.f1_score(y_test, p)
-    p = metrics.precision_score(y_test, p)
-    r = metrics.recall_score(y_test, p)
+for q, pred, y_test in zip(qualities, np.transpose(Pred), np.transpose(Y_test)):
+    f = metrics.f1_score(y_test, pred)
+    p = metrics.precision_score(y_test, pred)
+    r = metrics.recall_score(y_test, pred)
     performance.write(q
                       +', '+ str(round(p,3))\
                       +', '+ str(round(r,3))\

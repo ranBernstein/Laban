@@ -1,0 +1,8 @@
+Quality,Precision,Recall,F1 score
+Jump,0.692,0.75,0.72
+Spread,0.529,0.818,0.643
+ArmsToUpperBody,0.5,0.5,0.5
+Free+Light,0.529,0.474,0.5
+Sink,0.444,0.571,0.5
+Condense+Enclose,0.4,0.5,0.444
+Rotation,0.3,0.857,0.444

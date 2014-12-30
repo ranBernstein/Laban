@@ -9,9 +9,7 @@
 \usepackage{float}
 \usepackage{amsmath}
 \usepackage{pgfplotstable}
-\begin{filecontents}{oneCMASummary.csv}
-\end{filecontents}
-
+\usepackage{amsmath }
 \begin{document}
 \newcolumntype{M}{>{\begin{varwidth}{3cm}}l<{\end{varwidth}}}
 
@@ -58,12 +56,12 @@ Time: Sudden or Sustained
 \item
 Weight: Strong or Light 
 \end{itemize}
-The whole hierarchy of LMA is described in figure number \ref{laban}.
 \begin{figure*}[ht]
 \centering
 \includegraphics[width=\textwidth]{laban.png}
-\caption{Laban movement analysis main axes.}
-\label{laban}
+\caption{Laban movement analysis main axes. Adopted from \cite{LMA}}
+\label{labanTree}
+The whole hierarchy of LMA is described in figure number \ref{labanTree}.
 \end{figure*}
 \subsection{Laban qualities automated recognition}
 Several attempts were made in order to recognize Laban qualities, most of them
@@ -426,30 +424,53 @@ different unknown distribution, $p(x|\theta)$. Training and test distribution
 may differ arbitrarily, but there is only one unknown
 target conditional class distribution $p(y|x)$.
 \subsubsection{Instance  Weighting}
-Lets denote the tuple $(X_{source}, Y_{source})$ is our labled source dataset 
-of lenght $m$, $X_{target}$ our unlabeled target dataset of lenght $n$, and the
-concatination of the last two as $X$, and we will define $R_{(m+n) \times t}$
-such as:
+We denote our labled source's domain dataset as the tuple $(X_{source},
+Y_{source})$ of lenght $m$, our unlabeled target's dataset of
+lenght $n$ as $X_{target}$, and the concatination of $X_{source}$ and
+$X_{target}$ as $X$, and we will define $R_{(m+n) \times t}$ such as:
 \[
-    \R_{i,j}=
+    R_{i,j}=
 \begin{cases}
-    0,& \text{if } 0<i<=m\\
-    1,& \text{if }  m < i <= m+n
+    0,& \text{if } 0<i \leq m\\
+    1,& \text{if }  m < i \leq m+n
 \end{cases}
 \]
-i.e. $r$ assigns 0 for every source sample and 1 for very target.
-//
-If $t$ is number of tasks that we handle and $d$ is our input dimension, except
-to the mulititask classifier $W_{d \times t}$, we will learn an instance weighting $V_{d \times t}$ matrix, that will assign a weight for every instance in \testbf{every task}.
- when inserting $V$ to the multitask elastic
-net framework, we get:
+i.e. $R$ assigns 0 for every source's sample and 1 for very target's in every
+task.
+
+\\If $t$ is number of tasks that we handle and $d$ is our input dimension,
+except to the mulititask classifier $W_{d \times t}$, we will learn an instance
+weighting matrix $V_{d \times t}$, that will be a regressor that will assign a
+weight for every instance in \testbf{every task}. i.e. for a sample as a column vector $x_i$, the
+product $x_i\cdot V$ will give us a vector of length t that represents the
+importance of that sample for every task. 
+\\When inserting $V$ to the multitask
+elastic net framework, we get:
 \\\textbf{Optimization Problem: }\textit{Over all W, and V, minimize:}
 \begin{equation*}
-	\|X_{source}V(Y_{source} - X_{source}W)\|^2_F + \lambda_1\cdot\|W\|_{2,1} +
-	\lambda_2\cdot\|W\|^2_F + \lambda_3\cdot\|XV-R\|^2_F
+\begin{split}
+	&\|X_{source}V(Y_{source} - X_{source}W)\|^2_F 
+	\\&+ \lambda_1\cdot\|W\|_{2,1}
+	\\&+\lambda_2\cdot\|W\|^2_F
+	\\&+\lambda_3\cdot\|XV-R\|^2_F
+\end{split}
 \end{equation*}
 i.e. learning both of the classifier and the instance weighting for all
 of the tasks together.
+
+\subsection{Validation on ordinary people}
+The final validation was made ordinary people (non CMAs). We
+designed several daily actions (greeting friends, playing with a baloon etc.),
+and the CMAs commitie has tagged the clips. This dataset was small and
+concetrated on the elemnts that are shown in table number \ref{nonCMAs}.
+ \begin{table*}[ht]
+	   \centering
+	   \csvautotabular{nonCMAs.csv}
+	   \caption{Performance on ordinary people (non CMAs), that  have been told to
+	   perform several tasks.}
+	   \label{nonCMAs}
+	\end{table*}
+	
 \begin{thebibliography}{1}
 \bibliographystyle{alpha}
 \bibitem{Bickel}{Bickel, Steffen, Michael Brückner, and Tobias Scheffer.
@@ -492,6 +513,6 @@ Proceedings of the 24th international conference on Machine learning. ACM, 2007.
   Computational Intelligence and AI in Games, IEEE Transactions on 4.3 (2012): 199-212. 
   \bibitem{Zacharatos}Zacharatos, Haris, et al. "Emotion Recognition for Exergames
   using Laban Movement Analysis." Proceedings of the Motion on Games. ACM, 2013.
-   
+  \bibitem{LMA} http://www.laban-movement-analyses.be/
  \end{thebibliography}
 \end{document}

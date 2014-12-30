@@ -108,10 +108,10 @@ def getSplitThreshold(x, y):
             bestF1 = f1
     return bestSplit, bestF1
 
-def getSplits(X, Y):
+def getSplits(pred, Y):
     splits = []
-    for col in range(X.shape[1]):
-        bestSplit, bestF1 = getSplitThreshold(X[:, col], Y[:, col])
+    for col in range(pred.shape[1]):
+        bestSplit, bestF1 = getSplitThreshold(pred[:, col], Y[:, col])
         splits.append(bestSplit)
     return splits
 
@@ -120,7 +120,7 @@ def quantisizeBySplits(pred_p, splits):
     pred = copy.copy(pred_p)
     for col in range(pred.shape[1]):
         pred[:, col] = [1 if e>=splits[col] else 0 for e in pred[:, col]]
-    return pred
+    return np.array(pred)
 
 def accumulateCMA(CMAs):
     trndatas = None
@@ -168,7 +168,7 @@ def getMultiTaskclassifier(X, Y):
     X_filtered = transform(X)
     clf = MultiTaskElasticNetCV(normalize=True)
     clf.fit(X_filtered, Y)
-    return clf
+    return clf, transform
     
     
     
