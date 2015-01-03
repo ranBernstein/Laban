@@ -10,13 +10,28 @@
 \usepackage{amsmath}
 \usepackage{pgfplotstable}
 \usepackage{amsmath }
+\usepackage[T1]{fontenc}
+
+\usepackage{authblk}
+
+\author[1]{Bernstein Ran}
+\author[2]{Shafir Tal}
+\author[3]{Tsachor Rachelle}
+\author[4]{Studd Karen}
+\author[1]{Schuster Assaf}
+\affil[1]{Department of Computer Science, Technion I.I.T, Haifa, Israel}
+\affil[2]{The Graduate School of Creative Arts Therapies, University of Haifa}
+\affil[3]{School of Theatre \& Music, The University of Illinois at Chicago}
+\affil[4]{School of Dance, George Mason University}
+
+
+
 \begin{document}
+\nocite{*}
 \newcolumntype{M}{>{\begin{varwidth}{3cm}}l<{\end{varwidth}}}
 
-\author{Ran Bernstein \\
-\texttt{ranb@cs.technion.ac.il} \\
-Department of Computer Science, Technion I.I.T, Haifa, Israel}
-\title{Laban Movement Analysis using Kinect Sensor and Transfer Learning}
+
+\title{Laban Movement Analysis using Kinect Sensor}
 \maketitle
 \begin{quote}{``Man moves in order to satisfy a need.`` ---\textup{Rudolph Laban}}
 \end{quote}
@@ -26,9 +41,11 @@ over the past seventy years, is an effective method for observing, describing, n
 movement to enhance communication and expression in everyday and professional life.
 Many applications that use motion capture data might be significantly
 leveraged if the Laban qualities will be recognized automatically.
-This paper presents an automated machine learning based method of recognition of
-Laban qualities from motion capture skeletal recordings. The method is
-demonstrated on the output of Microsoft's Kinect V2 sensor.}
+This paper presents an automated machine learning based method, that recognize
+the Laban qualities from motion capture skeletal recordings. The method is
+demonstrated on the output of Microsoft's Kinect V2 sensor. The method has
+succeded getting over 60\% of recall and precision rate avarged over the
+qualities.}
 \end{abstract}
 \section{Introduction}
 \subsection{Motivation for LMA}
@@ -63,17 +80,12 @@ Weight: Strong or Light
 \label{labanTree}
 The whole hierarchy of LMA is described in figure number \ref{labanTree}.
 \end{figure*}
-\subsection{Laban qualities automated recognition}
-Several attempts were made in order to recognize Laban qualities, most of them
-were made for emotion recognition in the context of Human Robot Interaction (HRI).
-Masuda et al. generated emotional body motion for a human 
-form robot \cite{Masuda}. Rett et al. proposed a human motion recognition 
-system using a Bayesian reasoning framework \cite{Rett}. Common in 
-these studies, computational LMA offers some evidence that 
-motion conveys emotional information, and this information 
-allows such systems to estimate qualitative changes of motion.
-Kim et al. performed first steps in this direction with the Kinect sensor, in 
-this paper we extend such kind of work.
+Our main motivation for LMA comes from the correlation between LMA and emotional
+movements and emotions as stated by Shafir \cite{shafir}.
+From that reason we narrowed our mission on the recognition of 18 Laban
+qualities (as listed in table \ref{mixedSummary}) that have been found as
+predictive for emotions by Shafir.
+
 \subsection{Kinect sensor data}
 This following figure shows the skeleton that is provided by the Kinect's
 software development kit that were use in this paper.
@@ -95,6 +107,19 @@ coordinate system, that has the beginning [0,0,0] in the sensor, x,y and z-axis 
 \label{Coordinate}
 \end{figure}
 
+\subsection{Related Work}
+Several attempts were made in order to recognize Laban qualities, most of them
+were made for emotion recognition in the context of Human Robot Interaction (HRI).
+Masuda et al. generated emotional body motion for a human 
+form robot \cite{Masuda}. Rett et al. proposed a human motion recognition 
+system using a Bayesian reasoning framework \cite{Rett}. Zacharatos at al.
+\cite{Zacharatos} and Kim at al. \cite{kim} got inspiration from LMA for emotion
+recognition using the kinect sensor, but their focus was on the emotions, not
+on the LMA.
+Common in these studies, computational LMA offers some evidence that motion conveys emotional information, and this information 
+allows such systems to estimate qualitative changes of motion.
+Kim et al. performed first steps in this direction with the Kinect sensor, in 
+this paper we extend such kind of work.
 
 \section{Dataset Creation and Extraction}
 \subsection{Clips Collection}
@@ -108,7 +133,7 @@ Two main datasets were collected:
 	several specific qualities, and nothing but them.
 	\item 
 	Non CMAs dataset - includes 3 subjects without a background in movement
-	analysis, performing 18 clips each. Every clip is 3 seconds long too, where the
+	analysis, performing 20 clips each. Every clip is 3 seconds long too, where the
 	in every clip the subject was asked to perform one out of two operations.
 \end{itemize}
 \subsection{Clips Labeling}
@@ -274,8 +299,8 @@ where the results in every one will stand as a base line for the next setup.
 \subsection{Per CMA evaluation}
 	In this experiment both of the train and test datasets are taken from the same
 	CMA. The average performance over the different CMAs are shown in table
-	\ref{oneCMASummary}. The way that the per Laban quality performance are
-	distributed are demonstrated in figure \ref{oneCMAFinal}.
+	\ref{oneCMASummary}. The performance on every Laban quality separetaly
+	is demonstrated on a dataset of one of the CMAs in figure \ref{oneCMAFinal}.
 	\begin{table}[H]
 	  	\centering
 		\begin{tabular}{|p{1.6cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
@@ -299,8 +324,9 @@ where the results in every one will stand as a base line for the next setup.
 	\begin{figure*}[ht!]
 		\centering
 		\includegraphics[width=\textwidth, height=60mm]{oneCMAFinal.png}
-		\caption{Recall, precision and F1 score of each Laban quality separately.}
-		\label{oneCMAFinal}
+		\caption{Recall, precision and F1 score of each Laban quality separately. The
+		evaluation was made on a dataset that was captured on only one CMA.}
+		\label{oneCMAFinalWithoutTitle}
 	\end{figure*}
 	
 \subsection{Mixed datasets evaluation}
@@ -329,7 +355,8 @@ where the results in every one will stand as a base line for the next setup.
 \subsubsection{Multi task vs Single task learning}
 We found that multitask learning for all the 18 qualities together overcome in
 its performance learning a classifier to each problem separately. For the
-multitask mission we used Multitask Elastic Net (MEN) regularization, where the
+multitask mission we used Multitask Elastic Net (MEN) regularization, which is
+the multitask from of Zou at al. \cite{Zou} regularuzation, where the
 optimization objective for the MEN is:
 \\
 \begin{equation*}
@@ -370,25 +397,39 @@ from the small dataset when using this setting.
 	\end{table}
 
 \subsubsection{Per quality performance in multitask setting}
-	\begin{figure*}[ht]	
-		\centering
-		\pgfplotstabletypeset[
-	    col sep=comma,
-	    string type,
-	    every head row/.style={before row=\hline,after row=\hline},
-	    every last row/.style={before row=\hline,after row=\hline},
-	    columns/Quality/.style={column type={|l|}},
-     	columns/Precision/.style={column type={c}, column type/.add={}{|}},
-     	columns/Recall/.style={column type={c}, column type/.add={}{|}},
-     	columns/F1 score/.style={column type={c}, column type/.add={}{|}}, 
-     	]{mixedSummary.csv}
-	    \caption{Recall, precision and F1 score of each Laban quality on a CMA
+	\begin{table}[ht!]
+	  	\centering
+		\begin{tabular}{|p{3cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
+		\hline
+		Quality&Precis-ion&Recall&F1 score\\\hline
+		Jump&0.89&0.81&0.85\\\hline
+		Twist+Back&0.69&0.85&0.76\\\hline
+		Sink&0.62&0.79&0.69\\\hline
+		Rhythmicity&0.59&0.72&0.65\\\hline
+		Spread&0.55&0.76&0.64\\\hline
+		Head drop&0.60&0.66&0.63\\\hline
+		Rotation&0.66&0.60&0.63\\\hline
+		Free and Light&0.45&0.94&0.61\\\hline
+		Up and Rise&0.67&0.54&0.60\\\hline
+		Condense and Enclose&0.44&0.84&0.58\\\hline
+		Arms To Upper Body&0.67&0.54&0.60\\\hline
+		Advance&1.00&0.38&0.55\\\hline
+		Retreat&0.50&0.59&0.54\\\hline
+		Passive&0.40&0.85&0.54\\\hline
+		Bind&0.44&0.61&0.51\\\hline
+		Direct&0.56&0.49&0.52\\\hline
+		Sudden&0.61&0.41&0.49\\\hline
+		Strong&0.29&0.42&0.34\\\hline
+		\textbf{Average}&\textbf{0.59}&\textbf{0.65}&\textbf{0.60}\\\hline
+		\textbf{SD}&\textbf{0.17}&\textbf{0.17}&\textbf{0.11}\\\hline
+		\end{tabular}
+		\caption{Recall, precision and F1 score of each Laban quality on a CMA
 		   mixture dataset. The learning was done in a multitask setting. The number of
 		   features that didn't become zero after the mixed norm regularization is
 		   282 (same features for all of the tasks). The F1 average and standard
 		   deviation over the qualities is shown in the last row of the table.}
-		   \label{mixedSummary}
-	\end{figure*}
+	   \label{mixedSummary}
+	\end{table}
 
 \subsection{Domain Adaptation}
 In this experiment the test set was taken from a CMA that didn't appear in
@@ -438,7 +479,7 @@ $X_{target}$ as $X$, and we will define $R_{(m+n) \times t}$ such as:
 i.e. $R$ assigns 0 for every source's sample and 1 for very target's in every
 task.
 
-\\If $t$ is number of tasks that we handle and $d$ is our input dimension,
+If $t$ is number of tasks that we handle and $d$ is our input dimension,
 except to the mulititask classifier $W_{d \times t}$, we will learn an instance
 weighting matrix $V_{d \times t}$, that will be a regressor that will assign a
 weight for every instance in \testbf{every task}. i.e. for a sample as a column vector $x_i$, the
@@ -463,56 +504,28 @@ The final validation was made ordinary people (non CMAs). We
 designed several daily actions (greeting friends, playing with a baloon etc.),
 and the CMAs commitie has tagged the clips. This dataset was small and
 concetrated on the elemnts that are shown in table number \ref{nonCMAs}.
- \begin{table*}[ht]
-	   \centering
-	   \csvautotabular{nonCMAs.csv}
-	   \caption{Performance on ordinary people (non CMAs), that  have been told to
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
+	\hline
+	Quality&Precis-ion&Recall&F1 score\\\hline
+	Jump&0.69&0.75&0.72\\\hline
+	Spread&0.53&0.82&0.65\\\hline
+	Arms To Upper Body&0.5&0.5&0.5\\\hline
+	Free and Light&0.53&0.48&0.5\\\hline
+	Sink&0.45&0.58&0.5\\\hline
+	Condense and Enclose&0.4&0.5&0.45\\\hline
+	Rotation&0.3&0.86&0.45\\\hline
+	\end{tabular}
+	\caption{Performance on ordinary people (non CMAs), that  have been told to
 	   perform several tasks.}
-	   \label{nonCMAs}
-	\end{table*}
-	
-\begin{thebibliography}{1}
-\bibliographystyle{alpha}
-\bibitem{Bickel}{Bickel, Steffen, Michael Brückner, and Tobias Scheffer.
-"Discriminative learning for differing training and test distributions." 
-Proceedings of the 24th international conference on Machine learning. ACM, 2007.} 
-\bibitem{Bouchard}Bouchard, Durell, and Norman Badler. "Semantic segmentation
-  of motion capture using laban movement analysis." Intelligent Virtual Agents. Springer Berlin Heidelberg, 2007. 
-  \bibitem{Camurri}Antonio Camurri, Giovanni De Poli, Anders Friberg, Marc Leman
-	& Gualtiero Volpe (2005): The MEGA Project: Analysis and Synthesis of
-	Multisensory Expressive Gesture in Performing Art Applications, Journal of New
-	Music Research, 34:1, 5-21
-	\bibitem{Castellano}Ginevra Castellano , Santiago D. Villalba , Antonio
-	Camurri, Recognising Human Emotions from Body Movement and Gesture Dynamics, 
-	Proceedings of the 2nd international conference on Affective Computing and Intelligent Interaction, 
-	September 12-14, 2007, Lisbon, Portugal  
-  \bibitem{Chen}Chen, J., et al. "Analysis and evaluation of human
-  movement based on laban movement analysis." Tamkang Journal of Science and Engineering 13.3 (2011): 255-264. 
-  \bibitem{Foroud}Foroud, Afra, and Ian Q. Whishaw. "The consummatory origins of
-  visually guided reaching in human infants: a dynamic integration of whole-body and upper-limb movements." Behavioural brain research 231.2 (2012): 343-355. \bibitem{Karpouzis}Karpouzis, Kostas, 
-  et al. "Modeling naturalistic affective
-  states via facial, vocal, and bodily expressions recognition." Artificial intelligence for human computing. Springer Berlin Heidelberg, 2007. 91-112. 
-  \bibitem{Garber}Garber-Barron, Michael, and Mei Si. "Using body movement and
-  posture for emotion detection in non-acted scenarios." Fuzzy Systems (FUZZ-IEEE), 2012 IEEE International Conference on. IEEE, 2012. \bibitem{Kim}Kim, Woo Hyun, et al. "LMA based emotional motion representation
-  using RGB-D camera." Proceedings of the 8th ACM/IEEE international conference on Human-robot 
-  interaction. IEEE Press, 2013.
-  \bibitem{Laban} Laban, Rudolf, and Lisa Ullmann. "The mastery of movement."
-  (1971).
-  \bibitem{Lourens}Lourens, Tino, Roos Van Berkel, and Emilia Barakova.
-  "Communicating emotions and mental states to robots in a real time parallel framework using Laban movement analysis." Robotics and Autonomous Systems 58.12 (2010): 1256-1265. 
-  \bibitem{Masuda}M. Masuda and S. Kato, “Motion Rendering System for 
-	Emotion Expression of Human Form Robots Based on Laban 
-	Movement Analysis,” 19th IEEE International Symposium on 
-	Robot and Human Interactive Communication, Italy, 2010. 
-  \bibitem{Nguyen}Nguyen, Anh-Tuan, Wei Chen, and Matthias Rauterberg. "Online
-  Feedback System for Public Speakers." IEEE Symp. e-Learning, e-Management and e-Services. 2012. \bibitem{Rett}J. Rett and J. Dias, “Bayesian reasoning for Laban Movement
-  Analysis used in human-machine interaction,” International Journal of Reasoning-based 
-  Intelligent Systems, Vol. 2, No. 1,pp. 13-35, 2010
-  \bibitem{Savva}Savva, Nikolaos, Alfonsina Scarinzi, and Nadia
-  Bianchi-Berthouze. "Continuous recognition of player's affective body expression as dynamic quality of aesthetic experience." 
-  Computational Intelligence and AI in Games, IEEE Transactions on 4.3 (2012): 199-212. 
-  \bibitem{Zacharatos}Zacharatos, Haris, et al. "Emotion Recognition for Exergames
-  using Laban Movement Analysis." Proceedings of the Motion on Games. ACM, 2013.
-  \bibitem{LMA} http://www.laban-movement-analyses.be/
- \end{thebibliography}
+\label{nonCMAs}
+\end{table}
+
+\section{Conclusion}
+
+\bibliographystyle{unsrt}
+\bibliography{bib}
+
 \end{document}
