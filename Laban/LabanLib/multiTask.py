@@ -43,7 +43,6 @@ performance.write('Quality, Precision, Recall, F1 score\n')
 for test in range(testNum):
     tstdata, trndata = ds.splitWithProportion( splitProportion )
     #trndata = ds
-    X_all, Y_all = labanUtil.getXYfromPybrainDS(ds)
     X, Y = labanUtil.getXYfromPybrainDS(trndata)
     X_test, Y_test = labanUtil.getXYfromPybrainDS(tstdata)
     
@@ -60,8 +59,7 @@ for test in range(testNum):
     selectedIndices = accum.argsort()[:selectedFeaureNum]
     def transform(X):
         return X[:, selectedIndices]     
-    X_filtered, X_test_filtered, X_all_filtered =  \
-    transform(X), transform(X_test), transform(X_all)
+    X_filtered, X_test_filtered =  transform(X), transform(X_test)
     clf = MultiTaskElasticNetCV(normalize=True)
     #clf = MultiTaskLasso(normalize=True)
     clf.fit(X_filtered, Y)

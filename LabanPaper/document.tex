@@ -40,11 +40,11 @@
 over the past seventy years, is an effective method for observing, describing, notating, and interpreting human
 movement to enhance communication and expression in everyday and professional life.
 Many applications that use motion capture data might be significantly
-leveraged if the Laban qualities will be recognized automatically.
+leveraged if LMA was automatically conducted on them.
 This paper presents an automated machine learning based method, that recognize
 the Laban qualities from motion capture skeletal recordings. The method is
 demonstrated on the output of Microsoft's Kinect V2 sensor. The method has
-succeded getting over 60\% of recall and precision rate avarged over the
+succeed getting over 60\% of recall and precision rate averaged over the
 qualities.}
 \end{abstract}
 \section{Introduction}
@@ -82,7 +82,7 @@ The whole hierarchy of LMA is described in figure number \ref{labanTree}.
 \end{figure*}
 Our main motivation for LMA comes from the correlation between LMA and emotional
 movements and emotions as stated by Shafir \cite{shafir}.
-From that reason we narrowed our mission on the recognition of 18 Laban
+From that reason we narrowed our mission on the recognition of  only 18 Laban
 qualities (as listed in table \ref{mixedSummary}) that have been found as
 predictive for emotions by Shafir.
 
@@ -108,14 +108,16 @@ coordinate system, that has the beginning [0,0,0] in the sensor, x,y and z-axis 
 \end{figure}
 
 \subsection{Related Work}
-Several attempts were made in order to recognize Laban qualities, most of them
-were made for emotion recognition in the context of Human Robot Interaction (HRI).
-Masuda et al. generated emotional body motion for a human 
+Several attempts were made in order to recognize Laban qualities,
+most of them were made for emotion recognition in the context of Human Robot Interaction (HRI).
+Martin at al. \cite{martin} has analysed the importance of gestures in emotion
+recognition for HRI. Masuda et al. generated emotional body motion for a human 
 form robot \cite{Masuda}. Rett et al. proposed a human motion recognition 
-system using a Bayesian reasoning framework \cite{Rett}. Zacharatos at al.
-\cite{Zacharatos} and Kim at al. \cite{kim} got inspiration from LMA for emotion
-recognition using the kinect sensor, but their focus was on the emotions, not
-on the LMA.
+system using a Bayesian reasoning framework \cite{Rett}. Gabel et al.
+\cite{gabel2012full} used the Kinect for gait analysis. Zacharatos et al.
+\cite{Zacharatos} and Kim at al. \cite{kim} got
+inspiration from LMA for emotion recognition using the Kinect, but their focus was on emotions, not
+on LMA.
 Common in these studies, computational LMA offers some evidence that motion conveys emotional information, and this information 
 allows such systems to estimate qualitative changes of motion.
 Kim et al. performed first steps in this direction with the Kinect sensor, in 
@@ -178,11 +180,11 @@ $\vec{F}_{sag} = \phi([S_{sag}(1), \ldots S_{sag}(n)])$
 \\\\
 Where $\phi$ is the moments extraction.
 \subsubsection{Shape: Horizontal}
-Here the separation is between spreading and enclosing in the horizontal axe.
+Here the separation is between spreading and enclosing in the horizontal axis
 This quality was quantified by measuring the average distance of the joint from
-the the vertical axe of the body that spreads from the Head (H) along the Spine
+the the vertical axis of the body that spreads from the Head (H) along the Spine
 Base (SB).
-This axe was approximated with the Kinect's horizontal axis(y), what made the
+This axis was approximated with the Kinect's horizontal axis(y), what made the
 distance measured in the projection of the joints on the XZ plane.
 \\
 \\$d_{j} = \frac{\left|(\vec{P}_{j}-\vec{P}_{SB})\times
@@ -195,7 +197,7 @@ distance measured in the projection of the joints on the XZ plane.
 Where $\phi$ is the moments extraction.
 \subsubsection{Shape: Vertical}
 Here the separation is between Rise and sink.
-This quality was quantified by measuring the average distance on axe y of each
+This quality was quantified by measuring the average distance on axis y of each
 joint from the COM. This quantification comes from the assumption that the body
 is ``longer'' when rising.
 \\
@@ -242,25 +244,28 @@ with the usage of F one score:
 		Computing the Anova F-value for every feature over the training set. Cross validation was used to determine the optimal amount of features that should be
 		left. As it seen in figure  \ref{selection}, The result was that the filtering
 		of the vectors outperformed the usage in non filtered vectors, where using the
-		top 2\% of features is optimal.
+		top 4\% of features is optimal.
 		\begin{figure}[ht!]
 			\centering
-			\includegraphics[width=60mm]{featureSelection.png}
-			\caption{Influence of the percent of features that were used on the F1 score.
-			The blue line is the difference between the score with an without feature
-			selection. It can be seen that the optimal amount to select is 2\% 
-			}
+			\includegraphics[width=70mm]{featureSelection.png}
+			\caption{Influence of the percent of features that were selected based on
+			statistical significance on the F1 score.
+			The blue line is the difference between the score with and without feature
+			selection. It can be seen that the optimal amount to select is 4\%}
 			\label{selection}
 			\end{figure}
 		\item
 		\ref{igFromFclassif}
 		The second phase of feature selection is conducted by information gain rating
-		of the features.
-		\begin{figure}[h]
+		of the features. As it seen in figure  \ref{igFromFclassif}, the optimal ratio
+		was selecting the top 60\% out of the features that have been selected by
+		statistical significance.
+		 \begin{figure}[h]
 			\centering
-			\includegraphics[width=60mm]{igFromFclassif.png}
+			\includegraphics[width=70mm]{igFromFclassif.png}
 			\caption{Influence of the proportion of Information based selection from the
-			subset chosen by the ANOVA selection.}
+			subset of features that was chosen by the ANOVA selection. The optimal ratio
+			was 60\%.}
 			\label{igFromFclassif}
 		\end{figure}
 		\item
@@ -285,8 +290,8 @@ with the usage of F one score:
 	\end{table*}
 
 \section{Experimental Setups and Results}
-\subsection{Multi-label classification}
-Multi-label learning deals with the problem where each instance is associated
+\subsection{Multilabel classification}
+Multilabel learning deals with the problem where each instance is associated
 with multiple labels simultaneously, where the number of labels is not fixed
 between instance to instance. The task of this learning paradigm is to predict
 the label (Laban quality) set for each unseen instance (skeletal recording), 
@@ -299,7 +304,7 @@ where the results in every one will stand as a base line for the next setup.
 \subsection{Per CMA evaluation}
 	In this experiment both of the train and test datasets are taken from the same
 	CMA. The average performance over the different CMAs are shown in table
-	\ref{oneCMASummary}. The performance on every Laban quality separetaly
+	\ref{oneCMASummary}. The performance on every Laban quality separately
 	is demonstrated on a dataset of one of the CMAs in figure \ref{oneCMAFinal}.
 	\begin{table}[H]
 	  	\centering
@@ -323,10 +328,10 @@ where the results in every one will stand as a base line for the next setup.
 
 	\begin{figure*}[ht!]
 		\centering
-		\includegraphics[width=\textwidth, height=60mm]{oneCMAFinal.png}
+		\includegraphics[width=\textwidth, height=60mm]{oneCMAFinalWithoutTitle.png}
 		\caption{Recall, precision and F1 score of each Laban quality separately. The
 		evaluation was made on a dataset that was captured on only one CMA.}
-		\label{oneCMAFinalWithoutTitle}
+		\label{oneCMAFinal}
 	\end{figure*}
 	
 \subsection{Mixed datasets evaluation}
@@ -356,7 +361,7 @@ where the results in every one will stand as a base line for the next setup.
 We found that multitask learning for all the 18 qualities together overcome in
 its performance learning a classifier to each problem separately. For the
 multitask mission we used Multitask Elastic Net (MEN) regularization, which is
-the multitask from of Zou at al. \cite{Zou} regularuzation, where the
+the multitask from of Zou at al. \cite{Zou} regularization, where the
 optimization objective for the MEN is:
 \\
 \begin{equation*}
@@ -368,9 +373,9 @@ parameter that balance between the $L_{2,1}$ and the rest.
 Where:
 \\
 \begin{equation*}
-        \|W\|_{21} = \sum_i \sqrt{\sum_j w_{ij}^2}
+        \|W\|_{2,1} = \sum_i \sqrt{\sum_j w_{ij}^2}
 \end{equation*} 
-    i.e. the sum of norm of each row, and 
+    i.e. the sum of norm of each row (also known as mixed norm), and 
 \begin{equation*}
         \|W\|^2_F = \sum_i{\sum_j w_{ij}^2}
 \end{equation*}     
@@ -396,8 +401,10 @@ from the small dataset when using this setting.
 	   \label{MultitaskVsSeparated}
 	\end{table}
 
-\subsubsection{Per quality performance in multitask setting}
-	\begin{table}[ht!]
+\subsubsection{Performance of every quality in multitask setting}
+The In table \ref{mixedSummary} are shown the performance of every quality in
+multitask setting. 
+\begin{table}[ht!]
 	  	\centering
 		\begin{tabular}{|p{3cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
 		\hline
@@ -430,11 +437,17 @@ from the small dataset when using this setting.
 		   deviation over the qualities is shown in the last row of the table.}
 	   \label{mixedSummary}
 	\end{table}
+The mixed norm term in the MEN optimization problem promotes
+sparsity in the weights matrix $W$ in the way that every row is or all zeros or
+all non-zeros. This affect is a kind of collective (over the tasks) feature
+selection. The collective decision which features to select, enhanced the
+generalization ability of the model, especially in the qualities that
+performed worse in the single task learning (e.g. strong and sudden).
 
-\subsection{Domain Adaptation}
+\subsection{Evaluation on a new CMA}
 In this experiment the test set was taken from a CMA that didn't appear in
-the train set. As it shown in table \ref{domainAdaptationBaseLine}, there is a
-dramatic degradation in the performance on the new CMA.  
+the train set. As it shown in table
+\ref{domainAdaptationBaseLine}, there is a degradation in the performance on the new CMA.
  \begin{table}[H]
   	\centering
 	\begin{tabular}{|p{1.8cm}|p{1.8cm}|p{1.8cm}|}
@@ -444,7 +457,7 @@ dramatic degradation in the performance on the new CMA.
 	Recall&0.53&0.089\\\hline
 	F1&0.457&0.064\\\hline
 	\end{tabular}
-	\caption{Qualities detection performance on a never seen subject. In every
+	\caption{Qualities detection performance on a new subject. In every
 	trial one CMA was the test set, while the classifier was learned from the
 rest of the CMAs.}
    \label{domainAdaptationBaseLine}
@@ -454,56 +467,12 @@ one CMA to others. Every CMA performed different gestures, in different postures
 (some sitting while some standing) and in different context (some were dancing
 while some where acting).
 This great variability motivated us to work in Domain Adaptation (DA) setting.
-\subsubsection{Problem Setting}
-As it was stated by Bickel at al. \cite{Bickel}, in the DA problem setting, a
-labeled training sample:
-\\ $L = <(x_1; y_1),\ldots,(x_m; y_m)>$ is available.
-This training sample is governed by an unknown distribution $p(x|\lambda)$, labels
-are drawn according to an unknown target concept $p(y|x)$. In addition, an unlabeled test set: 
-$T = <xm+1,\ldots,xm+ni>$ becomes available. The test set is governed by a
-different unknown distribution, $p(x|\theta)$. Training and test distribution
-may differ arbitrarily, but there is only one unknown
-target conditional class distribution $p(y|x)$.
-\subsubsection{Instance  Weighting}
-We denote our labled source's domain dataset as the tuple $(X_{source},
-Y_{source})$ of lenght $m$, our unlabeled target's dataset of
-lenght $n$ as $X_{target}$, and the concatination of $X_{source}$ and
-$X_{target}$ as $X$, and we will define $R_{(m+n) \times t}$ such as:
-\[
-    R_{i,j}=
-\begin{cases}
-    0,& \text{if } 0<i \leq m\\
-    1,& \text{if }  m < i \leq m+n
-\end{cases}
-\]
-i.e. $R$ assigns 0 for every source's sample and 1 for very target's in every
-task.
-
-If $t$ is number of tasks that we handle and $d$ is our input dimension,
-except to the mulititask classifier $W_{d \times t}$, we will learn an instance
-weighting matrix $V_{d \times t}$, that will be a regressor that will assign a
-weight for every instance in \testbf{every task}. i.e. for a sample as a column vector $x_i$, the
-product $x_i\cdot V$ will give us a vector of length t that represents the
-importance of that sample for every task. 
-\\When inserting $V$ to the multitask
-elastic net framework, we get:
-\\\textbf{Optimization Problem: }\textit{Over all W, and V, minimize:}
-\begin{equation*}
-\begin{split}
-	&\|X_{source}V(Y_{source} - X_{source}W)\|^2_F 
-	\\&+ \lambda_1\cdot\|W\|_{2,1}
-	\\&+\lambda_2\cdot\|W\|^2_F
-	\\&+\lambda_3\cdot\|XV-R\|^2_F
-\end{split}
-\end{equation*}
-i.e. learning both of the classifier and the instance weighting for all
-of the tasks together.
 
 \subsection{Validation on ordinary people}
 The final validation was made ordinary people (non CMAs). We
-designed several daily actions (greeting friends, playing with a baloon etc.),
-and the CMAs commitie has tagged the clips. This dataset was small and
-concetrated on the elemnts that are shown in table number \ref{nonCMAs}.
+designed several daily actions (greeting friends, playing with a balloon etc.),
+and the CMAs committee has tagged the clips. This dataset was small and
+concentrated on the elements that are shown in table number \ref{nonCMAs}.
 
 \begin{table}[H]
 \centering
@@ -524,7 +493,12 @@ concetrated on the elemnts that are shown in table number \ref{nonCMAs}.
 \end{table}
 
 \section{Conclusion}
-
+Our method has succeed getting over 60\% of recall and precision rate averaged over the
+qualities. There are few Laban qualities, such as strong, that we have found that is
+more difficult to quantify in bio-mechanical measurements. Over all we believe
+that we have succeeded capturing the essence of most of the qualities with a
+100\$ sensor, what will make the LMA reachable in places that it have never seen
+before.
 \bibliographystyle{unsrt}
 \bibliography{bib}
 

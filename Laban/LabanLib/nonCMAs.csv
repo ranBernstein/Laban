@@ -1,19 +1,20 @@
 Quality, Precision, Recall, F1 score
-Advance, 0.5, 0.25, 0.333
-ArmsToUpperBody, 0.5, 0.5, 0.5
-Bind, 0.333, 0.25, 0.286
-Condense+Enclose, 0.4, 0.5, 0.444
-Direct, 0.0, 0.0, 0.0
-Free+Light, 0.529, 0.474, 0.5
-HeadDrop, 0.167, 0.333, 0.222
-Jump, 0.692, 0.75, 0.72
-Passive, 0.111, 0.2, 0.143
-Retreat, 0.0, 0.0, 0.0
-Rhythmicity, 0.154, 0.333, 0.211
-Rotation, 0.3, 0.857, 0.444
-Sink, 0.444, 0.571, 0.5
-Spread, 0.529, 0.818, 0.643
-Strong, 0.2, 0.111, 0.143
-Sudden, 0.333, 0.105, 0.16
-Twist+Back, 0.0, 0.0, 0.0
-Up+Rise, 0.286, 0.4, 0.333
+Advance, Tara, 0.0, 0.0, 0.0
+ArmsToUpperBody, Tara, 0.636, 0.875, 0.737
+Bind, Tara, 0.563, 0.9, 0.692
+Condense+Enclose, Tara, 0.556, 0.556, 0.556
+Direct, Tara, 0.0, 0.0, 0.0
+Free+Light, Tara, 0.526, 1.0, 0.69
+HeadDrop, Tara, 0.8, 0.571, 0.667
+Jump, Tara, 1.0, 0.857, 0.923
+Passive, Tara, 0.545, 0.667, 0.6
+Retreat, Tara, 0.429, 0.333, 0.375
+Rhythmicity, Tara, 0.588, 0.909, 0.714
+Rotation, Tara, 0.667, 1.0, 0.8
+Sink, Tara, 0.636, 0.875, 0.737
+Spread, Tara, 0.615, 0.889, 0.727
+Strong, Tara, 0.0, 0.0, 0.0
+Sudden, Tara, 0.0, 0.0, 0.0
+Twist+Back, Tara, 0.636, 0.7, 0.667
+Up+Rise, Tara, 0.8, 0.889, 0.842
+ise, Michal, 0.556, 0.417, 0.476

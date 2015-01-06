@@ -104,7 +104,7 @@ if __name__ == '__main__':
     featureSelctedPrecision = []
 
     #params = np.linspace(0.1, 1, 10)
-    params = [2,3,4,5,6,7]
+    params = [1,3,4,5,6,99]
     m = {}
     splitProportion=0.2
     testNum=100
