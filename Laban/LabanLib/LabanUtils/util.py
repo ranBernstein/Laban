@@ -151,6 +151,7 @@ def getNonCMAs(nonCMAs, qualities):
                 fileName = os.path.join(root, f)
                 x, featuresNames = ge.getFeatureVec(fileName, False)
                 X.append(x), Y.append(y)
+    print counter
     return np.array(X), np.array(Y), counter
 
 from sklearn.feature_selection import f_classif, SelectKBest, f_regression,RFECV
