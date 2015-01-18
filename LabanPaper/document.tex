@@ -11,7 +11,7 @@
 \usepackage{pgfplotstable}
 \usepackage{amsmath }
 \usepackage[T1]{fontenc}
-
+\usepackage[compact]{titlesec}
 \usepackage{authblk}
 
 \author[1]{Bernstein Ran}
@@ -38,67 +38,55 @@
 \begin{abstract}
 \textbf{Laban Movement Analysis (LMA) is a method for describing, interpreting
 and documenting all varieties of human movement. Analyzing movements using LMA is advantageous over kinematic 
-description of the movement, as it captures also qualitative aspects in addition to the 
-quantitative aspects of the movement. As such, it has many applications and its popularity is 
-increasing in recent years as the preferred method for movement analysis. In
-this study was developed a Machine Learning (ML) method for recognizing Laban
-motor elements from marker-less Motion Capture (MOCAP) camera --- Microsoft's Kinect.
+description of the movement, as it captures qualitative aspects in addition to the 
+quantitative aspects of the movement. In recent years, LMA is increasing becoming the preferred method for movement analysis. In this study we developed a Machine Learning (ML) method for recognizing Laban
+motor elements from a markerless Motion Capture (MOCAP) camera --- Microsoft's Kinect.
 It obtained a recall and precision rate of about 60\%  averaged over the
 elements.}
 \end{abstract}
 \section{Introduction}
-The aim of our work is to create a method for an automated identification of Laban motor elements 
-(might be referred also as qualities) that characterize any movement sequence,
-using Kinect. Our problem is challenging in three aspects. The first is
-quantifying subtle qualities that a well posed quantification for them haven't been found
-yet. The second aspect is handling noisy sensory data with in-home setup, and the
+Our goal is to create a method for automated identification of Laban motor elements 
+(referred to also as qualities) that characterize any movement sequence,
+using Kinect. Our problem presents three challenges. The first is
+quantifying subtle qualities for which a well defined quantification has not yet been found. The second challenge is handling noisy sensory data with an in-home setup, and the
 third is keeping our method as general as possible --- we handle
-different scenarios (dancing, and acting for example), and different postures
-(sitting, and standing for example), by different people with different
-background in movement if any. We propose a low-cost (100\$) , non-intrusive
-(marker-less), ubiquitous (76 millions sensors around the world) system that can recognize Laban motor elements using the Kinect sensor and Software Development Kit (SDK).
-For evaluation, we have created our own dataset, and applied several ML
+different scenarios (dancing and acting, for example), and different postures
+(sitting and standing, for example), by different people with different
+if any background in movement. 
+\\\\We propose a low-cost (100\$), non-intrusive
+(markerless), ubiquitous (76 million sensors around the world) system that can recognize Laban motor elements using the Kinect sensor and Software Development Kit (SDK).
+For evaluation, we have created our own dataset and applied several ML
 techniques on it, in several learning settings. We chose to use ML (instead of rule based algorithms), so 
-we would be able to use all of the rich data that is provided by the Kinect, and not to focus on a very 
-subtle feature extraction that requires domain expertise. Using ML gave us
-an opportunity to do reverse engineering of the learned models, and learn about
-our problem's intrinsic characteristics such as which features are predictive
-to which qualities. The system obtained a recall and precision rate of between
+we would be able to use all of the rich data provided by the Kinect sensor rather than focus on a very 
+subtle feature extraction method that requires domain expertise. Using ML gave us
+an opportunity to reverse engineer the learned models and learn about
+our problem's intrinsic characteristics, such as which features are predictive
+of which qualities. The system obtained a recall and precision rate of between
 40-60\% in the more subtle qualities, and 60-90\% in the more expressive ones.
 \subsection{Motivation for Automated LMA}
-The applications for computerized identification of the motor elements that characterize each possible 
-human movement are numerous. For example: the generation and control of specific expressive movements 
-of avatars, virtual characters, or robots in Mixed Reality scenarios
+There are numerous applications for computerized identification of the motor elements that characterize each possible human movement. Examples include the generation and control of specific expressive movements 
+of avatars, virtual characters, or robots in mixed reality scenarios
 \cite{Masuda}; detection of personality traits during a job interview; early detection, severity assessment 
-or revealing of genetic tendency (phenotype) towards various illnesses such as Alzheimer,
+or revealing of genetic tendency (phenotype) towards various illnesses such as Alzheimer's,
 autism, Parkinson's disease \cite{camurri2003application}, or schizophrenia,
-based on analysis of the person’s motor behavior; monitoring influences over time and early detection of deviation from normal behavior in 
-closed environments such as space travel, and more. Automated emotion recognition from movement is another 
+based on analysis of the person's motor behavior, and more. Automated emotion recognition from movement is another 
 important application, which may have a variety of uses such as online feedback 
 to presenters to help them convey through their body language the emotional message they want to communicate 
-(e.g., politicians and public speakers ; actors training) \cite{nguyen2012online}; or emotion recognition 
-of people’s emotions during interactive games such as those played using the Xbox \cite{Zacharatos}. 
+(e.g., politicians and public speakers or actors in training) \cite{nguyen2012online}; or recognition 
+of people's emotions during interactive games such as those played using the Xbox \cite{Zacharatos}. 
 \\\\Our work on LMA is motivated by the correlation between LMA and emotional movements and emotions as 
-stated by Shafir --- an expert researcher in the emotional movement domain. For that reason we narrowed 
-recognition to only 18 Laban qualities (as listed in table \ref{mixedSummary}) that Shafir found to be
-predictive for emotions.
+stated by Shafir --- an expert researcher in the emotional movement domain. According to her domain expertise, we narrowed recognition to only 18 Laban qualities (as listed in table \ref{mixedSummary}) that Shafir found to be predictive for emotions.
 \subsection{Laban movement analysis}
-LMA is a formal language for motion description 
-invented by Rudolf Laban \cite{Laban} in the middle of the 20th 
-century. LMA describes, interprets, and documents mental 
-states from both conscious and unconscious human 
-motion based on Laban's categories of body, effort, shape, 
-and space. LMA has been used in the fields of dance, 
-acting, athletics, physical therapy, and psychology and 
-behavioral science. Laban exercises are based on the belief that by observing and analyzing 
-movements, both conscious and unconscious, it is possible to recognize the objectives 
-of the mover and to become aware of an inner attitude that precedes an action. Laban 
+LMA is a formal language for motion description first developed by Rudolf Laban \cite{Laban} and colleagues in the middle of the 20th century. LMA describes both conscious and unconscious human movement, based on Laban's categories of \textit{Body}, \textit{Effort}, \textit{Shape}, and \textit{Space}. LMA has been used in the fields of dance, acting, athletics, physical therapy, and psychology and behavioral science.
+LMA describes both conscious and unconscious human movement, based on Laban's categories of \textit{Body}, \textit{Effort}, \textit{Shape}, and \textit{Space}. LMA has been used in the fields of dance, 
+acting, athletics, physical therapy, and psychology and behavioral science. Laban exercises are based on the belief that by observing and analyzing movements, both conscious and unconscious, it is possible to recognize the objectives of the mover and to become aware of an inner attitude that precedes an action. Laban 
 helps actors create momentary moods and long-standing personality traits 
-through movement. For example, LMA work investigates the effort properties ---
-flow, space, time and weight --- of all movement and helps actors think
+through movement. For example, LMA work investigates the \textit{Effort} properties ---
+\textit{Flow}, \textit{Space}, \textit{Time} and \textit{Weight} --- of all movement and helps actors think
 specifically about why their character might move in a jerky, fast, light and direct manner
 verses a heavy, slow, indirect and uninterrupted manner.
 The effort properties are defined as follows:
+Laban helps actors create momentary moods and long-standing personality traits through movement. For example, LMA work investigates the \textit{Effort} properties \textit{Flow}, \textit{Space}, \textit{Time} and \textit{Weight} of all movement and helps actors think specifically about why their character might move in a jerky, fast, light and direct manner verses a heavy, slow, indirect and uninterrupted manner. The Effort properties are defined as follows:
 \begin{itemize}
 \item
 Flow: Bound or Free 
@@ -118,7 +106,7 @@ Weight: Strong or Light
 The entire LMA hierarchy is shown in figure \ref{labanTree}.
 
 \subsection{Kinect Sensor Data}
-This following figure shows the skeleton provided by Kinect's
+The following figure shows the skeleton provided by Kinect's
 software development kit and used in this paper.
 \begin{figure}[h]
 \centering
@@ -127,11 +115,11 @@ software development kit and used in this paper.
 \label{skeleton}
 \end{figure}
 Once the skeleton is detected, the 3D coordinates of all the joints of the
-user's body --- with the exception of joints that are not visible (e.g. a user's
+user's body --- with the exception of joints that are not visible (e.g., a user's
 hand is behind his or her back) --- are provided.
 As seen in Figure \ref{Coordinate}, the coordinates are in a ``real-world''
 coordinate system, whose origin [0,0,0] is in the sensor and whose x-, y-, and
-z-axis are as depicted below;
+z-axis are as depicted below.
 \begin{figure}[h]
 \centering
 \includegraphics[width=60mm]{KinectV2CoordinateSystem.jpg}
@@ -140,56 +128,45 @@ z-axis are as depicted below;
 \end{figure}
 
 \subsection{Related Work}
-Several attempts were made to recognize Laban qualities,
-most of them for emotion recognition in the context of Human Robot Interaction (HRI).
-Martin et al. \cite{martin} analyzed the importance of gestures in emotion
-recognition for HRI. Masuda et al. generated emotional body motion for a human 
+Several attempts were made to recognize Laban qualities, the first was Chi et al. \cite{chi2000emote}, that has quantified \textit{Effort} and \textit{Shape} for animation. Most of the rest were for emotion recognition in the context of Human Robot Interaction (HRI). Martin et al. \cite{martin} analyzed the importance of gestures in emotion recognition for HRI. Masuda et al. generated emotional body motion for a human 
 form robot \cite{Masuda}. Rett et al. proposed a human motion recognition 
 system using a Bayesian reasoning framework \cite{Rett}. The second line of
-works is focused on LMA (not on emotions), but not using Kinect. Lourens et al.
-\ref{lourens2010communicating} used video data and Samadani et al.
-\ref{samadani2013laban} used a high quality MOCAP camera, but both of them
-analyzed only hand guesters. Third line of works used Kinect as their main
+works is focused on LMA (not on emotions), but not using Kinect. Lourens et al. \cite{lourens2010communicating} used video data and Samadani et al.
+\cite{samadani2013laban} used a high quality MOCAP camera, but both of them
+analyzed only hand gestures. A third line of works used Kinect as the main
 sensor for skeletal information. Gabel et al.
 \cite{gabel2012full} used Kinect for gait analysis. The work of
-Zacharatos et al. \cite{Zacharatos} was inspired by LMA for emotion recognition
-using Kinect. His feature extraction was influenced from LMA principles, but did
-not attempt try to recognize the qualities themselves. Kim et al. \cite{kim}
-tried to recognize the qualities themselves, but he didn't try his method on
-real dataset and didn't evaluated the performance of his method.
-
+Zacharatos et al. \cite{Zacharatos} was inspired by LMA for emotion recognition using Kinect. His feature extraction method was influenced by LMA principles, but he did not attempt try to recognize the qualities themselves. Kim et al. \cite{kim} did attempt to do so but not on a real dataset and his work did not include a performance evaluation.
 \section{Method}
-Due to the fact that we are the first to handle Laban recognition with
-Kinect V2, we had to create a dataset from scratch. To reduce the noise, and for
-being sure that we capture the essence of the Laban qualities in our dataset, we
-decided that most of the dataset will come from recording CMAs, and just a small
-amount of validation clips will come from ordinary people. We didn't want to
+Because we are the first to handle Laban recognition with
+Kinect V2, we had to create a dataset from scratch. To reduce the noise, and ensure that we capture the essence of the Laban qualities in our dataset, we decided that most of it should be built by recording several Certified [Laban] Movement Analyst (CMA), with just a few validation clips taken from recordings of ordinary people. We did not want to
 constrain the lengths of the clips to be equal, so in order to get feature
-vectors in uniform length (regardless of the original length of the clips),
+vectors of uniform length (regardless of the original length of the clips),
 every feature is function of a whole clip (for example, the variability of the
 elbow's acceleration). On the uniform length feature vector we applied feature
-selection, single task learning (learning a model for every quality separately)
-and multitask learning (learning a model for the qualities all together).
+selection, single task learning (learning a model for every quality separately),
+and multitask learning (learning a model for all the qualities together).
 \subsection{Clip Collection}
 Two main datasets were collected: 
 \begin{itemize}
   	\item 
-	Certified Movement Analyst (CMA) dataset - includes 6 CMAs performing in about
-	80 clips each (a total of 550 clips). Every clip is 3 seconds long, and
-	the CMA performs random activity in it. To achieve uniform distribution of the Laban
-	qualities over the dataset, in every clip the CMA was asked to perform
-	actions that include several specific qualities, and nothing but them.
+	 CMA dataset - includes 6 CMAs performing in about
+	80 clips each (a total of 550 clips). Every clip is about 3 seconds long, and
+	the CMA's executed combinations of the 18 elements Shafir et. al. identified. 
+	To achieve uniform distribution of the Laban qualities over the dataset, in every 
+	clip the CMA was asked to perform actions that include several specific qualities, 
+	and nothing but them.
 	
 	\begin{figure}[h]
 	\centering
-	\includegraphics[width=30mm]{Rachelle.jpg}
+	\includegraphics[width=30mm]{Rachelle.png}
 	\caption{CMA during a clip}
 	\label{Rachelle}
 	\end{figure}
 	
 	\item 
 	Non-CMAs dataset - includes 2 subjects without a background in movement
-	analysis, performing 30 clips each. Every clip is also 3 seconds long,
+	analysis, performing 30 clips each. Every clip is also about 3 seconds long,
 	and the subject was asked to perform one out of several
 	tasks.
 \end{itemize}
@@ -198,8 +175,8 @@ To achieve a ground truth labeling for the two datasets, every clip was tagged b
 a committee of 2 CMAs who determined which Laban qualities appear in the
 clip. The use of a committee decision instead of the subjective opinion of one
 CMA decreases the labeling noise and the decision is considered as ground truth.
-We believe this is justifiable in light of the fact that there is no real
-ground truth in such a nonquantitative method as LMA.
+We believe this is justifiable in light of the fact that LMA has demonstrated 
+inter-observer reliability.
 \subsection{Feature Extraction}
 Due to the unequal length of clips, all the extracted features are in whole clip 
 granularity.
@@ -209,8 +186,8 @@ were extracted, and for every pair of joint and metric, the mean, variance,
 skew, and kurtosis were extracted (the extraction of the last four moments
 is denoted as $\phi$).
 \subsubsection{LMA Shape Analysis: Sagittal Plane}
-The Laban's shape analysis of the sagittal plane is the distinction
-between Advance and Retreat. This distinction was quantified by projecting the 
+Laban shape analysis of the sagittal plane is based on the distinction
+between two qualities, \textit{Advance} and \textit{Retreat}. This distinction was quantified by projecting the 
 speed vector of the Center Of Mass (COM) on the vector of the front of the body. 
 The COM was approximated in this case by the average of all of the joints. 
 The front of the body was approximated by the perpendicular vector to the vector 
@@ -218,7 +195,7 @@ between the Left Shoulder (LS) and
 the Right Shoulder (RS).
 \\\\If $\vec{P}_{j}(t)$ is the vector of the position of joint j in time t in
 a clip with n frames, and $ \alpha_{j}$ is a coefficient proportional to the
-mass around of the joint:
+mass around of the joint, then
 \\
 \\$\vec{P}_{COM}(t) = \sum_{j \in Joints} \alpha_{j}\vec{P}_{j}(t),
 \\
@@ -237,8 +214,8 @@ $\vec{F}_{sag} = \phi([S_{sag}(1), \ldots S_{sag}(n)]),$
 \\\
 where $\phi$ denotes extraction of the moments.
 \subsubsection{LMA Shape Analysis: Horizontal Axis}
-Here the distinction is between spreading and enclosing on the horizontal axis.
-This distinction was quantified by measuring the average distance of the joint from 
+Here the distinction is between \textit{Spreading} and \textit{Enclosing} on the horizontal axis.
+This distinction was quantified by measuring the average distance between every joint to 
 the vertical axis of the body that spreads from the Head (H) to the Spine Base (SB).
 \\
 \\$d_{j} = \frac{\left|(\vec{P}_{j}-\vec{P}_{SB})\times
@@ -260,7 +237,7 @@ is ``longer'' when rising.
 \\\vec{F}_{vert} = \phi([S_{sag}(1), \ldots S_{sag}(n)]),$
 \\where $\phi$ denotes the extraction of the moments.
 \subsubsection{LMA Effort Analysis: Time Category}
-Here the distinction is between sudden or sustained. This quality was 
+Here the distinction is between \textit{Sudden} and \textit{sustained}. This quality was 
 quantified by the skew of the acceleration, relying on the assumption that the
 acceleration of a sudden movement will be skewed further to the left, i.e., will get
 a higher value at the beginning of the movement.
@@ -276,9 +253,9 @@ movement vectors are:
 \\\\$\vec{A}_{j}(t) = \vec{V}_{j}(t+1) \cdot \vec{V}_{j}(t).$
 
 \subsection{Performance Evaluation}
-There are 18 labels (Laban qualities) that can be assigned to every clip, but
-a typical clip usually includes about 3 qualities, which means that there is
-about 85\% chance that a quality won't appear in a clip. Due to
+We examined 18 labels (Laban qualities) in all the clips.  Each clip was a
+combination of just a few of these, often 3-4, which means that there is
+about an 85\% chance that a quality won't appear in a clip. Due to
 this sparsity, accuracy alone is not a relevant metric for the
 performance evaluation because one can get the an 85\% accuracy by stating that
 for every recording none of the qualities appear. A better evaluation would have to
@@ -287,20 +264,16 @@ the F1 score:
 \\
 \\$F_{1} = \frac{2\cdot precision\cdot recall}{precision+recall}.$
 \subsection{Feature Selection}
-	Every clip is extracted into a vector of 6120 features. Most of
-	them are noisy or redundant. For that reason massive feature selection is
-	needed. The feature selection is done in three stages:
+Every clip is extracted into a vector of 6120 features, most of which are noisy or redundant, thus requiring massive feature selection. The feature selection is done in three stages:
 	\begin{itemize}
 		\item
 		Computing the Anova F-value for every feature over the training set. Cross 
 		validation was used to determine the optimal number of features that should be
-		left. As it seen in Figure  \ref{selection}, the result was that the filtering
-		out most of the features yielded better results than not filtering them, where
-		using the top 4\% of features was optimal.
+		left. As seen in Figure  \ref{selection}, filtering out most of the features yielded better          results than not filtering them, where using the top 4\% of features was optimal.
 		\begin{figure}[ht!]
 			\centering
 			\includegraphics[width=70mm]{featureSelection.png}
-			\caption{Influence of the amount of features on the performance. The
+			\caption{Influence of the number of features on the performance. The
 			selection was made according to statistical significance.
 			The blue line is the difference between the score with and without feature
 			selection. It can be seen that the optimal fraction of features to select is
@@ -309,14 +282,14 @@ the F1 score:
 			\end{figure}
 		\item
 			The second phase of feature selection was conducted by Information Gain (IG)
-			rating of the features. As it seen in figure  \ref{igFromFclassif}, the optimal ratio
-			was selecting the top 60\% out of the features that have survived the first
+			rating of the features. As seen in figure  \ref{igFromFclassif}, the optimal ratio
+			was selecting the top 60\% out of the features that remained after the first
 			phase of feature selection.
 			 \begin{figure}[h]
 				\centering
 				\includegraphics[width=70mm]{igFromFclassif.png}
-				\caption{Influence of the amount of features selected with IG from the subset
-				of features that was chosen in the first phase on the performance. The
+				\caption{Influence of the number of features selected with IG from the subset
+				of features chosen in the first phase on the performance. The
 				optimal ratio was 60\%.}
 				\label{igFromFclassif}
 			\end{figure}
@@ -349,91 +322,109 @@ with multiple labels simultaneously, where the number of labels is not fixed
 from instance to instance. The task of this learning paradigm is to predict
 the label (Laban quality) set for each unseen instance (skeletal recording), 
 by analyzing training instances with known label sets. The multilabel
-approach taken in this paper is to break the whole LMA problem into 18
+approach taken in this paper is to break the LMA problem into 18
 binary classification tasks --- one for every Laban quality - where every binary
 decision is whether or not the quality exists.
 \\The following subsections will describe several experimental setups
 where the results in each will serve as a baseline for the next.
 \subsection{Per CMA Evaluation}
 	In this experiment the train and test datasets are taken from the same
-	CMA. The average performance over the different CMAs is shown in Table
-	\ref{oneCMASummary}. The performance on every Laban quality separately
-	is demonstrated on a dataset of one of the CMAs in figure \ref{oneCMAFinal}.
-	In tables \ref{oneCMAFinal} and \ref{mixedCMASummary} the incremental evolution
-	of the algorithm is described from step to step with the next notation:
+	CMA. The performance on every Laban quality separately 	is demonstrated on 
+	a dataset of one of the CMAs in Figure \ref{oneCMAFinal}.
+	In Figure \ref{oneCMASummary} the incremental evolution of the algorithm is 
+	described from step to step with the next notation:
 	\begin{itemize}
 	\item 
 	\textit{Chance} stands for randomly tossing a balanced coin in every
 	classification decision.
 	\item 
-	\textit{Nearest Neighbors} stands for applying the Nearest Neighbors algorithm.
+	\textit{NN} stands for applying the Nearest Neighbors algorithm.
 	\item 
 	\textit{LinearSVC} stands for Support Vector Classifier with a linear
 	kernel.
 	\item 
-	\textit{Label Balancing} stands for giving greater weight to clips that
+	\textit{LabelBalancing} stands for giving greater weight to clips that
 	contain the quality due to the small fraction of them in the whole
 	dataset.
 	\item 
-	\textit{Lasso}, \textit{Statistical Feature Selection}, and \textit{IG Feature
-	Selection} were described in the feature selection section.
+	\textit{Lasso}, \textit{SFS} (Statistical Feature Selection), and \textit{InfoGain} (information gain
+	based Feature selection) were described in the feature selection section.
 	\end{itemize}
-	 \begin{table}[H]
-	  	\centering
-		\begin{tabular}{|p{1.6cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
-		\hline
-		Algorithm /Metric&Preci-sion&Recall&F1&F1 SD\\\hline
-		Chance&0.15&0.50&0.23&0.01\\\hline
-		Nearest Neighbors&0.30&0.24&0.26&0.05\\\hline
-		LinearSVC &0.35&0.39&0.37&0.04\\\hline
-		Label Balancing&0.39&0.42&0.41&0.05\\\hline
-		Lasso&0.41&0.48&0.44&0.05\\\hline
-		Statistical Feature Selection&0.44&0.51&0.48&0.09\\\hline
-		IG Feature Selection&0.48&0.59&0.53&0.09\\\hline
-		\end{tabular}
-		\caption{Evaluation every CMA's dataset separately in single task learning
-		setting. Each row represents an additional step in the algorithm's evolution.
-		The results are the average performance and standard deviation (SD) over the CMAs.}
-	   \label{oneCMASummary}
-	\end{table}
 
-	\begin{figure*}[ht!]
-		\centering
-		\includegraphics[width=\textwidth, height=60mm]{oneCMAFinalWithoutTitle.png}
-		\caption{Recall, precision and F1 score of each Laban quality separately. The
-		evaluation was conducted on a dataset that was captured on only one CMA. 
-		Averaged over the qualities scores of the qualities are shown in the legend.}
-		\label{oneCMAFinal}
-	\end{figure*}
+\pgfplotstableread{
+x         y    y-max  y-min
+Chance          0.23 0.005 0.005
+NN              0.26 0.025 0.025
+LinearSVC       0.37 0.02  0.02
+LabelBalancing  0.41 0.025 0.025
+Lasso           0.44 0.025 0.025
+SFS             0.48 0.045 0.045
+InfoGain        0.53 0.045 0.045
+}{\mytable}
+
+\begin{figure}[ht]
+\centering   
+\begin{tikzpicture}
+\begin{axis} [
+    width=5cm,
+    ymin=0.2,
+    symbolic x coords={Chance,NN,LinearSVC,LabelBalancing,Lasso,SFS,InfoGain},
+    xtick=data,
+    x tick label style={rotate=90,anchor=east}
+]
+\addplot [ybar, fill=blue!50] 
+  plot [error bars/.cd, y dir=both, y explicit]
+  table [y error plus=y-max, y error minus=y-min] {\mytable};
+\end{axis} 
+\end{tikzpicture}
+\caption{Evaluation of every CMA's dataset separately in the single task learning
+		setting. Each column represents an additional step in the algorithm's evolution.
+		The results are the average F1 score and its standard deviation (STD) between the CMAs.}
+\label{oneCMASummary}
+\end{figure}
+  
+\begin{figure*}
+	\centering
+	\includegraphics[width=\textwidth, height=60mm]{oneCMAFinalWithoutTitle.png}
+	\caption{Recall, precision and F1 score of each Laban quality separately. The
+	evaluation was conducted on a dataset that was captured on only one CMA. 
+	The average scores of the qualities are shown in the legend.}
+	\label{oneCMAFinal}
+\end{figure*}
 	
 \subsection{Mixed Dataset Evaluation}
 	In this section the datasets of all of the CMAs were mixed. In the learning
 	and testing process the origin (CMA) of the sample was ignored. 
 \subsubsection{Single Task Learning as a Baseline}
 As a baseline we applied the SVM based flow that was described in the last
-section on the mixed dataset. The results are shown in Table
-\ref{mixedCMASummary}.
-\begin{table}[ht!]
-	  	\centering
-		\begin{tabular}{|p{1.6cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
-		\hline
-		Algorithm /Metric&Preci-sion&Recall&F1\\\hline
-		Chance&0.15&0.50&0.23\\\hline
-		Nearest Neighbors&0.41&0.235&0.3\\\hline
-		LinearSVC &0.4&0.43&0.418\\\hline
-		Label Balancing&0.394&0.47&0.43\\\hline
-		Lasso&0.4&0.45&0.42\\\hline
-		Statistic Feature Selection&0.462&0.69&0.55\\\hline
-		IG Feature Selection&0.46&0.71&0.56\\\hline
-		\end{tabular}
-		\caption{Evaluation on CMA mixture dataset in single task learning
-		setting. Every row is an additional step in the algorithm's evolution.}
-	   \label{mixedCMASummary}
-	\end{table}
-It can be seen that there an improvement of the performance in a compare to the
-per CMA evaluation of the last section. We explain the improvement with two
-reasons -- the growths of the dataset's size when merging few CMAs'
-datasets together, and the diversity of the clips which helps the model's
+section on the mixed dataset. The results are shown in Figure \ref{mixedCMASummary}.
+
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=5cm,
+    ybar stacked,
+    enlargelimits=0.15,
+    ylabel={F1 score},
+    symbolic x coords={Chance,NN,LinearSVC,LabelBalancing,Lasso,SFS,InfoGain},
+    xtick=data,
+    x tick label style={rotate=90,anchor=east},
+    ]
+\addplot+[ybar] plot coordinates  {(Chance,0.23) (NN,0.3) (LinearSVC,0.418) 
+		(LabelBalancing,0.43) (Lasso,0.42) (SFS, 0.55) (InfoGain,0.56)};
+
+\end{axis}
+\end{tikzpicture}
+\caption{Evaluation on CMA mixture dataset in single task learning
+		setting. Every Column is an additional step in the algorithm's evolution.}
+\label{mixedCMASummary}
+\end{figure}
+
+
+It can be seen that the performance improves in comparison to the
+per CMA evaluation of the last section. There are two reasons for this improvement: the increase in the dataset's size when merging a few CMA datasets together, and the diversity of the clips, which helps the model's
 generalization.
 \subsubsection{Multitask vs Single Task Learning}
 We found that multitask learning for all the 18 qualities together exhibited superior 
@@ -446,7 +437,7 @@ optimization objective is:
 	\|Y - XW\|^2_F+\lambda_1\cdot\|W\|_{2,1}+\lambda_1\cdot\|W\|^2_F,
 \end{equation}    
   
-$\lambda_1$, and $\lambda_2$ are hyper parameters, where,
+$\lambda_1$, and $\lambda_2$ are hyper-parameters, where,
 \\
 \begin{equation*}
         \|W\|_{2,1} = \sum_i \sqrt{\sum_j w_{ij}^2},
@@ -456,14 +447,13 @@ $\lambda_1$, and $\lambda_2$ are hyper parameters, where,
         \|W\|^2_F = \sum_i{\sum_j w_{ij}^2},
 \end{equation*}     
 	i.e., the Frobenius norm. 
-
 Feature selection was carried out by averaging the statistical significance of
 each feature with respect to different tasks (This is in contrast to the single
 task learning flow, where every task had its own feature selection). As seen in
-Table \ref{MultitaskVsSeparated} the multitask setting improved the F score by
+Table \ref{MultitaskVsSeparated}, the multitask setting improved the F score by
 7\%, indicating that the tasks are correlated and more might be learned
 from the small dataset when using this setting.	
- 	\begin{table}[H]
+ 	\begin{table}[ht]
 	  	\centering
 		\begin{tabular}{|p{1.8cm}|p{1.8cm}|p{1.8cm}|}
 		\hline
@@ -472,8 +462,8 @@ from the small dataset when using this setting.
 		Recall&\textbf{0.71}&0.65\\\hline
 		F1&0.56&\textbf{0.6}\\\hline
 		\end{tabular}
-		\caption{Multitask vs Single task learning performance evaluation on mixture
-		of CMAs dataset.}
+		\caption{Multitask vs Single task learning performance evaluation on a CMA mixture
+		dataset.}
 	   \label{MultitaskVsSeparated}
 	\end{table}
 
@@ -484,10 +474,8 @@ term $\|W\|_{2,1}$  promotes sparsity in the weights matrix $W$ such that for
 every row in the matrix, if one coordinate is equal to zero, then every coordinate 
 in the row will be equal to zero.
 \\The generalization ability of the model was enhanced by the fact that the
-decision which features to select is influenced by all the qualities, (feature $f_i$ is selected in the MEN if the row $r_i$ in $W$ is not all 
-zero), especially those that performed worse in the single task learning
-setting (strong, and sudden for example).
-\begin{table}[ht!]
+decision which features to select is influenced by all the qualities, (feature $f_i$ is selected in the MEN if the row $r_i$ in $W$ is not all zeros), especially those that performed worse in the single task learning setting (strong, and sudden for example).
+\begin{table}
 	  	\centering
 		\begin{tabular}{|p{3cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
 		\hline
@@ -521,14 +509,16 @@ setting (strong, and sudden for example).
 	   \label{mixedSummary}
 	\end{table}
 
-\subsection{Evaluation on a New CMA}
+\subsection{Evaluation on a Unseen CMA}
 In this experiment the test set was taken from a CMA who did not appear in
 the train set. As shown in Table \ref{domainAdaptationBaseLine}, 
-performance degrades on the new CMA.
+performance degrades on the new CMA. We blame the degradation on the large variability between clips from one CMA to another. Every CMA performed different gestures, in different
+postures (some sitting and some standing) and in different contexts (some were
+dancing while some were acting).
 
-\begin{table}[H]
+\begin{table}[ht]
   	\centering
-	\begin{tabular}{|p{3.5cm}|p{0.9cm}|p{0.9cm}|p{0.7cm}|}
+	\begin{tabular}{|p{3.2cm}|p{0.9cm}|p{0.9cm}|p{0.7cm}|}
 	\hline
 	Metric&Precis-ion&Recall&F1\\\hline 
 	Average Score&0.57&0.58&\textbf{0.57}\\\hline
@@ -538,52 +528,45 @@ performance degrades on the new CMA.
 	Standard deviation between CMAs&0.03&0.09&0.06\\\hline
 	Average (over CMAs) standard deviation within a CMA&0.2&0.23&0.16\\\hline
 	\end{tabular}
-	\caption{Quality detection performance on a new subject. In every
+	\caption{Quality detection performance on an unseen CMA. In every
 	trial one CMA was the test set, while the classifier was learned from the
 rest.}
    \label{domainAdaptationBaseLine}
 \end{table}
 
-We blame the degradation on the large variability between clips from
-one CMA to another. Every CMA performed different gestures, in different
-postures (some sitting and some standing) and in different contexts (some were
-dancing while some where acting).
-
 \subsection{Validation on Ordinary People}
-The final validation was conducted on ordinary people (non CMAs). We
+The final validation was conducted on ordinary people (non-CMAs). We
 designed several daily actions (greeting friends or playing with a balloon, for
-example) and the CMA committee tagged the clips. This dataset was small with a
-focus on the elements shown in table \ref{nonCMAs}.
+example) and the CMA committee tagged the clips. This dataset was small, with a
+focus on the qualities that we found that are easier to recognize. The evaluation is shown in Figure \ref{nonCMAs}.
 
-\begin{table}[H]
+\begin{figure}[ht]
 \centering
-\begin{tabular}{|p{3cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}
-	\hline
-	Quality&Precis-ion&Recall&F1 score\\\hline
-	Jump&0.69&0.75&0.72\\\hline
-	Spread&0.53&0.82&0.65\\\hline
-	Arms to Upper Body&0.5&0.5&0.5\\\hline
-	Free and Light&0.53&0.48&0.5\\\hline
-	Sink&0.45&0.58&0.5\\\hline
-	Condense and Enclose&0.4&0.5&0.45\\\hline
-	Rotation&0.3&0.86&0.45\\\hline
-	\end{tabular}
-	\caption{Performance on ordinary people (non-CMAs) instructed to
+\begin{tikzpicture}
+\begin{axis}[
+    ymin=0,
+    ymax=0.8,
+    width=5cm,
+    ybar stacked,
+    enlargelimits=0.15,
+    ylabel={F1 score},
+    symbolic x coords={Rotation,Condense\&Enclose,Sink,Free\&Light,ArmsToUpperBody,Spread,Jump},
+    xtick=data,
+    x tick label style={rotate=90,anchor=east},
+    ]
+\addplot+[ybar] plot coordinates  {(Rotation,0.45) (Condense\&Enclose,0.45) (Sink,0.5) 
+		(Free\&Light,0.5) (ArmsToUpperBody,0.5) (Spread, 0.65) (Jump,0.72)};
+
+\end{axis}
+\end{tikzpicture}
+\caption{Performance on ordinary people (non-CMAs) instructed to
 	   perform several tasks.}
 \label{nonCMAs}
-\end{table}
+\end{figure}
 
 \section{Conclusion}
-Our method obtained a recall and precision of about 60\% over the qualities.
-We found some qualities are easier to recognize than other. The more
-expressive ones such as \textit{jump}, \textit{spread}, and \textit{sink}, are
-more quantifiable by our understanding and are easier to be recognized
-(precision and recall of 60-90\%). The more subtle qualities such as
-\textit{strong} and \textit{passive}, are more difficult for to quantify in
-kinematic measurements, and for the system to obtain them. Overall we believe
-that we succeeded capturing the essence of most of the qualities, and
-gave a positive answer for the question if it can be done with a 100\$ sensor.
-We believe that our work is a base and inspiration that will make the LMA method
+We developed a method for recognizing Laban qualities using Microsoft Kinect sensor. Our method obtained a recall and precision of about 60\% over the qualities. We found some qualities are easier to recognize than others. The larger movements, such as \textit{jump}, \textit{spread}, and \textit{sink}, we understand better how to quantify them, which makes them easier to recognize (precision and recall of 60-90\%). The more subtle qualities such as \textit{strong} and \textit{passive}, are harder for us to quantify in kinematic measurements, and it makes them degrades the performance on them. Overall we believe that we succeeded capturing the essence of most of the qualities, using a cheap (\$100) and widely available sensor.
+We believe that our work will provide the foundation and inspiration that will make the LMA method
 applicable in many more methodologies and processes.
 \bibliographystyle{unsrt}
 \bibliography{bib}
