@@ -25,8 +25,8 @@ font = {'family' : 'normal',
 matplotlib.rc('font', **font)
 
 chooser=f_classif
-filteredFeaturesNum=40
-selectedFeaturesNum=filteredFeaturesNum/4
+filteredFeaturesNum=70
+selectedFeaturesNum=filteredFeaturesNum/2
 
 def eval(ds, clf, splitProportion=0.2, p=4):
     tstdata, trndata = ds.splitWithProportion( splitProportion )
@@ -39,8 +39,8 @@ def eval(ds, clf, splitProportion=0.2, p=4):
     anova_filter = SelectKBest(f_classif, k=filteredFeaturesNum)
     ig_wrapper = SelectKBest(ig.infoGain, k=selectedFeaturesNum)
     pipe = Pipeline([
-                    #('filter_selection', anova_filter),
-                    #('wrapper_selection', ig_wrapper),
+                    ('filter_selection', anova_filter),
+                    ('wrapper_selection', ig_wrapper),
                     ('classification', clf)
                     ])
     #pipe = svm.LinearSVC()
@@ -69,14 +69,14 @@ def eval(ds, clf, splitProportion=0.2, p=4):
 if __name__ == '__main__':
     p = Pool(7)
     qualities, combinations = cp.getCombinations()
-    source = 'Sharon' 
+    source = 'Rachelle' 
     ds, featuresNames = labanUtil.getPybrainDataSet(source)
     inLayerSize = len(ds.getSample(0)[0])
     outLayerSize = len(ds.getSample(0)[1])
     f1s = []
     ps=[] 
     rs=[]
-    testNum=200
+    testNum=500
     ""
     for _ in qualities:
         f1s.append([])
@@ -86,9 +86,9 @@ if __name__ == '__main__':
     #clf = AdaBoostClassifier()
     c_regulator=80
     #clf = svm.LinearSVC()
-    clf = svm.LinearSVC(C=c_regulator, loss='LR', dual=False,class_weight='auto')
-    #clf = svm.LinearSVC(C=c_regulator, loss='LR', penalty='L1', 
-     #                  dual=False, class_weight='auto')#{1: ratio}) 
+    #clf = svm.LinearSVC(C=c_regulator, loss='LR', dual=False,class_weight='auto')
+    clf = svm.LinearSVC(C=c_regulator, loss='LR', penalty='L1', 
+                       dual=False, class_weight='auto')#{1: ratio}) 
     splitProportion=0.2
     for i in range(testNum):
         m[i] = p.apply_async(eval, [ds, clf, splitProportion])
@@ -127,9 +127,9 @@ if __name__ == '__main__':
     ind = np.arange(len(realQualities))
     width = 0.25   
     print 
-    f1Rects = ax.bar(ind, accumFs, width, color='g', label='F1: '+str(np.round(np.mean(accumFs),3)) )
-    pRecrs = ax.bar(ind+width, accumPs, width, color='b', label='Precision: '+str(np.round(np.mean(accumPs),3)))
-    rRects = ax.bar(ind-width, accumRs, width, color='r', label='Recall: '+str(np.round(np.mean(accumRs),3)))
+    f1Rects = ax.bar(ind, accumFs, width, color='g', label='Average F1: '+str(np.round(np.mean(accumFs),3)) )
+    pRecrs = ax.bar(ind+width, accumPs, width, color='b', label='Average Precision: '+str(np.round(np.mean(accumPs),3)))
+    rRects = ax.bar(ind-width, accumRs, width, color='r', label='Average Recall: '+str(np.round(np.mean(accumRs),3)))
     ax.set_xticks(ind+width)
     xtickNames = plt.setp(ax, xticklabels=realQualities)
     plt.setp(xtickNames, rotation=90)#, fontsize=8)
