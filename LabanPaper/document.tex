@@ -41,20 +41,23 @@ as it captures their qualitative aspects in addition to the quantitative.
 Thus, in recent years, LMA is increasingly becoming the preferred method for movement analysis. 
 In this study we developed a Machine Learning (ML) method for recognizing Laban qualities from 
 a markerless Motion Capture (MOCAP) camera --- Microsoft's Kinect. 
-We believe that we are the first that have succeeded performing LMA with a ubiquitous sensor. 
-There are not close enough works to ours for a performance comparison, 
+We believe that we are the first succeeded identifying LMA with a ubiquitous
+sensor.
+There no papers similar enough to ours for a performance comparison,
 but our work obtained a recall and precision rate of about 60\%  averaged over
 the qualities, result that is a solid foundation for a future work, and even a
 success by itself.}
 \end{abstract}
 \section{Introduction}
-Our goal is to create a method for automated identification of Laban qualities that characterize any movement sequence,
-using Kinect. Our problem presents three challenges. The first is
-quantifying subtle qualities for which a well-defined quantification has not yet been found. The second challenge is handling noisy sensory data with an in-home setup, and the
-third is keeping our method as general as possible --- we handle
-different scenarios (dancing and acting, for example), and different postures
-(sitting and standing, for example), by different people with different
-if any background in movement. 
+Our goal is to create a method for automated identification of Laban qualities that 
+characterize any movement sequence, using Kinect. 
+Our problem presents three challenges. The first is
+quantifying subtle qualities for which a well-defined quantification has not yet been found. 
+The second challenge is handling noisy sensory data with an in-home setup, and the
+third is keeping our method as general as possible --- We are developing a system capable of 
+handling different scenarios (dancing and acting, for example), and different postures 
+(sitting and standing, for example), by different people of different backgrounds (if any) 
+in movement. 
 \\\\We propose a low-cost (100\$), non-intrusive
 (markerless), ubiquitous (76 million sensors around the world) system that can recognize Laban qualities using the Kinect sensor and Software Development Kit (SDK).
 For evaluation, we have created our own dataset and applied several ML
@@ -68,8 +71,8 @@ of which qualities. The system obtained a recall and precision rate of between
 \subsection{Motivation for Automated LMA}
 There are numerous applications for computerized identification of the qualities that characterize each possible human movement. Examples include the generation and control of specific expressive movements 
 of avatars, virtual characters, or robots in mixed reality scenarios
-\cite{Masuda}; detection of personality traits during a job interview; early detection, severity assessment 
-or revealing of genetic tendency (phenotype) towards various illnesses such as Alzheimer's,
+\cite{Masuda}; detection of personality traits during a job interview
+\cite{levy2003use}; early detection, severity assessment or revealing of genetic tendency (phenotype) towards various illnesses such as Alzheimer's,
 autism, Parkinson's disease \cite{camurri2003application}, or schizophrenia,
 based on analysis of the person's motor behavior. Automated emotion recognition from movement is another 
 important application, which may have a variety of uses such as online feedback 
@@ -82,7 +85,11 @@ of people's emotions during interactive games such as those played using the Xbo
 LMA is a formal language for motion description first developed by Rudolf Laban \cite{Laban} and colleagues in the middle of the 20th century. 
 LMA describes both conscious and unconscious human movement, based on Laban's categories of \textit{Body}, \textit{Effort}, \textit{Shape}, and \textit{Space}. 
 LMA has been used in the fields of dance, acting, athletics, physical therapy, and psychology and behavioral science.
-Laban helps actors create momentary moods and long-standing personality traits through movement. For example, LMA work investigates the \textit{Effort} properties \textit{Flow}, \textit{Space}, \textit{Time} and \textit{Weight} of all movement and helps actors think specifically about why their character might move in a jerky, fast, light and direct manner verses a heavy, slow, indirect and uninterrupted manner.
+LMA helps actors create momentary moods and portray personality traits through
+movement. For example, LMA work investigates the \textit{Effort} properties
+\textit{Flow}, \textit{Space}, \textit{Time} and \textit{Weight} of all movement and helps actors 
+think specifically about why their character might move in a jerky, fast, light and direct manner 
+versus a heavy, slow, indirect and uninterrupted manner.
 \begin{figure*}[ht]
 \centering
 \includegraphics[width=\textwidth]{laban.png}
@@ -166,7 +173,7 @@ angular velocity, acceleration, and jerk. For every joint/metric pair, the mean,
 variance, skew, and kurtosis were extracted (the extraction of the last four moments is denoted as $\phi$).
 \\\\We denote $\vec{P}_{j}(t)$ as the vector (as we get it from the Kinect) of
 the position of joint $j$ in time $t$ in a clip with $n$ frames, and
-$\alpha_{j}$ is a coefficient proportional to the mass around of the joint.
+$\alpha_{j}$ is a coefficient proportional to the mass around the joint.
 \subsubsection{Shape Analysis: Sagittal Plane}
 Laban shape analysis of the sagittal plane is based on the distinction
 between two qualities, \textit{Advance} and \textit{Retreat}. This distinction was quantified by projecting the 
@@ -202,7 +209,8 @@ the vertical axis of the body that extends from the Head (H) to the Spine Base (
 \\
 \\\vec{F}_{horiz} = \phi([S_{horiz}(1), \ldots S_{horiz}(n)]),$
 \subsubsection{Shape Analysis: Vertical Axis}
-Here the distinction is between rise and sink on the vertical axis.
+Here the distinction is between \textit{Rise} and \textit{Sink} on the vertical
+axis.
 This distinction was quantified by measuring the average distance on axis y of each joint from the CM. This quantification is based on the assumption that the body
 is ``longer'' when rising.
 \\\\$S_{vert}(t) = \sum_{j \in Joints}
@@ -213,8 +221,8 @@ Here the distinction is between \textit{Sudden} and \textit{Sustained}. This qua
 acceleration of a sudden movement will be skewed further to the left, i.e., will get
 a higher value at the beginning of the movement.
 \subsubsection{Effort Analysis: Space Category}
-Here the distinction is between direct and indirect motion. This quality was 
-quantified by the angle between the movement vector of a joint to the next one,
+Here the distinction is between \textit{direct} and \textit{Indirect} motion.
+This quality was quantified by the angle between the movement vector of a joint to the next one,
 relying on the assumption that in direct movement every vector will be in
 the same direction as the last (the angle between them is small).
 The velocity direction $V$ is calculated by
@@ -224,12 +232,12 @@ $\vec{A}_{j}(t) = \vec{V}_{j}(t+1) \cdot \vec{V}_{j}(t).$
 
 \subsection{Performance Evaluation}
 From a statistical point of view, we have 18 possible labels (Laban qualities) for every clip. 
-Each clip was a combination of just a few of these, often 3-4, which means that there is about an 85\% chance that a quality won't appear in a clip. Due to
-this sparsity, accuracy alone is not a relevant metric for the
-performance evaluation because one can get an 85\% accuracy by stating that
-for every recording none of the qualities appear. A better evaluation would have to
-combine the precision and recall rates of the classifier. This can be done using 
-the F1 score:
+Each clip was a combination of just a few of these, often 3-4, which means that there is about 
+an 85\% chance that a quality won't appear in a clip. Due to this sparsity, accuracy alone is 
+not a relevant metric for the performance evaluation because one can get 85\% accuracy by stating 
+that for every recording none of the qualities appear. 
+A better evaluation would have to combine the precision and recall rates of the classifier. 
+This can be done using the F1 score:
 \begin{equation*}
 F_{1} = \frac{2\cdot precision\cdot recall}{precision+recall}.
 \end{equation*} 
@@ -404,7 +412,7 @@ the multitask regularization method of Zou et al. \cite{Zou}, where the
 optimization objective is:
 \\
 \begin{equation}\label{eq:MEN}
-	\|Y - XW\|^2_F+\lambda_1\cdot\|W\|_{2,1}+\lambda_1\cdot\|W\|^2_F,
+	\|Y - XW\|^2_F+\lambda_1\cdot\|W\|_{2,1}+\lambda_2\cdot\|W\|^2_F,
 \end{equation}    
   
 $\lambda_1$, and $\lambda_2$ are hyper-parameters, where,
@@ -454,7 +462,7 @@ single task learning setting (\textit{Strong} and \textit{Sudden} for example).
 		\hline
 		Quality&Precis-ion&Recall&F1 score\\\hline
 		Jump&0.89&0.81&0.85\\\hline
-		Twist+Back&0.69&0.85&0.76\\\hline
+		Twist and Back&0.69&0.85&0.76\\\hline
 		Sink&0.62&0.79&0.69\\\hline
 		Rhythmicity&0.59&0.72&0.65\\\hline
 		Spread&0.55&0.76&0.64\\\hline

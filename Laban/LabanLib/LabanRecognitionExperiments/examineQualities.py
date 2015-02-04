@@ -1,6 +1,6 @@
 import numpy as np
-import LabanUtils.util as labanUtil
-import LabanUtils.combinationsParser as cp
+import LabanLib.LabanUtils.util as labanUtil
+import LabanLib.LabanUtils.combinationsParser as cp
 import matplotlib.pyplot as plt
 from sklearn import metrics, svm
 from sklearn.svm import SVR
@@ -11,7 +11,7 @@ import math
 from sklearn.feature_selection import SelectPercentile, f_classif, \
     f_oneway, f_regression, chi2, SelectKBest
 from sklearn.pipeline import Pipeline
-from LabanUtils import informationGain as ig 
+from LabanLib.LabanUtils import informationGain as ig 
 from sklearn.neighbors import KNeighborsClassifier
 import matplotlib
 

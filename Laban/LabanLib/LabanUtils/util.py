@@ -122,7 +122,7 @@ def quantisizeBySplits(pred_p, splits):
         pred[:, col] = [1 if e>=splits[col] else 0 for e in pred[:, col]]
     return np.array(pred)
 
-def accumulateCMA(CMAs):
+def accumulatePybrainCMA(CMAs):
     trndatas = None
     for trainSource in CMAs:
         trndata, featuresNames = getPybrainDataSet(trainSource)  
@@ -133,6 +133,15 @@ def accumulateCMA(CMAs):
                 trndatas.appendLinked(*s)
     return trndatas, featuresNames
 
+def accumulateCMA(CMAs, accumaltor):
+    X=[]
+    y=[]
+    for trainSource in CMAs:
+        currX,currY,featuresNames = accumaltor(trainSource)
+        X=X+currX
+        y=y+currY
+    return X, y, featuresNames
+        
 import os, os.path
 def getNonCMAs(nonCMAs, qualities):
     counter = np.zeros((len(qualities)))
@@ -157,6 +166,7 @@ def getNonCMAs(nonCMAs, qualities):
 from sklearn.feature_selection import f_classif, SelectKBest, f_regression,RFECV
 from sklearn.linear_model import MultiTaskElasticNetCV, MultiTaskElasticNet
 def getMultiTaskclassifier(X, Y):
+    X, Y = np.array(X), np.array(Y)
     selectedFeaureNum=500
     accum = np.zeros((X.shape[1],))
     for y in np.transpose(Y):
@@ -169,9 +179,30 @@ def getMultiTaskclassifier(X, Y):
     X_filtered = transform(X)
     clf = MultiTaskElasticNetCV(normalize=True)
     clf.fit(X_filtered, Y)
-    return clf, transform
+    return clf, selectedIndices
     
-    
+def getEmotionsDataset(source):
+    first = False#True
+    qualities, combinations = cp.getCombinations()
+    emotions = combinations.keys()
+    X=[]
+    y=[]
+    for i, emotion in enumerate(emotions):
+        if emotion=='neutral':
+            continue
+        for typeNum in range(1,21):
+            for take in range(1,10):
+                fileName = 'recordings/'+source+'/'+emotion+'/'+\
+                str(typeNum)+'_'+str(take)+'.skl'
+                try:
+                    data, featuresNames = ge.getFeatureVec(fileName, first)
+                    print fileName
+                    first = False
+                except IOError:
+                    continue
+                X.append(data)
+                y.append(i)
+    return X, y, featuresNames 
     
     
     

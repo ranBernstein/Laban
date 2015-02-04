@@ -1,10 +1,10 @@
 import numpy as np
-import LabanUtils.util as labanUtil
+import LabanLib.LabanUtils.util as labanUtil
 from sklearn import metrics
 import matplotlib.pyplot as plt
 from pybrain.supervised.trainers import BackpropTrainer
 from sklearn.pipeline import Pipeline
-from LabanUtils import informationGain as ig 
+from LabanLib.LabanUtils import informationGain as ig 
 from sklearn import cross_validation
 import copy
 import LabanLib.LabanUtils.combinationsParser as cp

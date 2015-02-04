@@ -3,8 +3,8 @@ from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.utilities import percentError
 import numpy as np
 import matplotlib.pyplot as plt
-import LabanLib as labanUtil
-import LabanLib as cp
+import LabanLib.LabanUtils.util as labanUtil
+import LabanLib.LabanUtils.combinationsParser as cp
 from sklearn import metrics
 
 qualities, combinations = cp.getCombinations()

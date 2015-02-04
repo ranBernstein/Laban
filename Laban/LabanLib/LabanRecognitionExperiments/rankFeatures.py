@@ -13,7 +13,7 @@ from sklearn.feature_selection import f_classif, SelectKBest, f_regression,RFECV
 from sklearn.linear_model import MultiTaskLassoCV, \
     MultiTaskElasticNetCV, MultiTaskElasticNet, MultiTaskLasso
 from collections import defaultdict
-from LabanLib.multiTask import selectedIndices
+from LabanLib.LabanRecognitionExperiments.multiTask import selectedIndices
 CMAs = ['Rachelle', 'Milca', 'Sharon', 'Karen','Michal','Tara']
 ds, featuresNames = labanUtil.accumulateCMA(CMAs) 
 X, Y = labanUtil.getXYfromPybrainDS(ds)
